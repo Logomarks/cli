@@ -1,7 +1,7 @@
 {
   "name": "logomarks",
   "version": "0.1.0",
-  "description": "Check logomarks the way the Logomarks set is checked (fit, specks, pin-holes, slivers, clipping, gaps, 32 px features, the nearest of 1,400+ live marks, review sheets), then build a brand on one: the mark's files, a free starter kit (favicons, lockups, palette, social images, brand sheet), mockups and covers. Also an MCP server for Claude Code, Codex and Cursor. Pure JS, resvg in WebAssembly.",
+  "description": "Check logomarks the way the Logomarks set is checked (fit, specks, pin-holes, slivers, clipping, gaps, 32 px features, the nearest of 2,000+ live marks, review sheets), then build a brand on one: the mark's files, a free starter kit (favicons, lockups, palette, social images, brand sheet), mockups and covers. Also an MCP server for Claude Code, Codex and Cursor. Pure JS, resvg in WebAssembly.",
   "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
