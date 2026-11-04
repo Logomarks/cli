@@ -1,0 +1,64 @@
+{
+  "name": "logomarks",
+  "version": "0.1.0",
+  "description": "Check logomarks the way the Logomarks set is checked: fit to the 512 grid, specks, pin-holes, slivers, clipping, even gaps and 32 px features; the nearest of 1,400+ live marks; and review sheets for an AI or a person to look at. Pure JS, resvg in WebAssembly.",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "bin": {
+    "logomarks": "bin/logomarks.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "data",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "index": "node scripts/index.js"
+  },
+  "keywords": [
+    "logo",
+    "logomark",
+    "logomarks",
+    "brand",
+    "svg",
+    "lint",
+    "check",
+    "favicon",
+    "duplicate",
+    "design-review",
+    "ai",
+    "claude-code",
+    "cli"
+  ],
+  "author": "David Sherlock",
+  "license": "MIT",
+  "homepage": "https://logomarks.ai",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@resvg/resvg-wasm": "2.6.2",
+    "polygon-clipping": "^0.15.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^6.0.3"
+  }
+}

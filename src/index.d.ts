@@ -1,0 +1,13 @@
+export { check, fix } from './checks/index.js';
+export type { CheckOptions, Report, Finding, FindingId, Severity } from './checks/index.js';
+export { FINDINGS } from './checks/finding.js';
+export type { FindingKind } from './checks/finding.js';
+export { similar } from './similar/nearest.js';
+export type { Match, Verdict, SimilarOptions } from './similar/nearest.js';
+export { loadIndex } from './similar/store.js';
+export type { MarkIndex, IndexedMark, IndexedLetter } from './similar/store.js';
+export { sheet } from './sheet/index.js';
+export type { Sheet, SheetMark, SheetOptions } from './sheet/index.js';
+export { fitMark } from './svg/fit.js';
+export type { Fitted } from './svg/fit.js';
+export * as rules from './rules.js';
