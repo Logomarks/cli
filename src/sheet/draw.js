@@ -5,7 +5,8 @@
  * in a box, a raster chip.
  */
 
-import { body } from '../svg/shapes.js';
+import { body, viewBox } from '../svg/shapes.js';
+import { LABEL_FONT_BOLD } from '../brand/fonts.js';
 import { COLORS, FONT } from './theme.js';
 
 /**
@@ -25,8 +26,8 @@ export const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace
  * @param {import('./draw.js').TextStyle} [o] How it looks.
  * @returns {string} The SVG.
  */
-export const text = (x, y, s, { size = 13, color = COLORS.text, weight = 400, anchor = 'start' } = {}) =>
-	`<text x="${x}" y="${y}" font-family="${FONT}" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}">${esc(s)}</text>`;
+export const text = (x, y, s, { size = 13, color = COLORS.text, weight = 400, anchor = 'start', font } = {}) =>
+	`<text x="${x}" y="${y}" font-family="${font ?? (weight >= 600 ? LABEL_FONT_BOLD : FONT)}" font-size="${size}" fill="${color}" text-anchor="${anchor}">${esc(s)}</text>`;
 
 /**
  * A rounded rectangle.
@@ -68,3 +69,27 @@ export const mark = (svg, x, y, size, color) =>
  */
 export const pixels = (png, x, y, size) =>
 	`<image x="${x}" y="${y}" width="${size}" height="${size}" image-rendering="optimizeSpeed" href="data:image/png;base64,${Buffer.from(png).toString('base64')}"/>`;
+
+/**
+ * An SVG placed in a box, scaled to fit and centred.
+ *
+ * @param {string} svg The SVG (with a `viewBox`).
+ * @param {number} x Left.
+ * @param {number} y Top.
+ * @param {number} w Width.
+ * @param {number} h Height.
+ * @returns {string} The SVG.
+ */
+export const nest = (svg, x, y, w, h) => `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${viewBox(svg)?.join(' ')}">${body(svg)}</svg>`;
+
+/**
+ * A raster image placed in a box, smoothly scaled.
+ *
+ * @param {Uint8Array} png The image.
+ * @param {number} x Left.
+ * @param {number} y Top.
+ * @param {number} w Width.
+ * @param {number} h Height.
+ * @returns {string} The SVG.
+ */
+export const image = (png, x, y, w, h) => `<image x="${x}" y="${y}" width="${w}" height="${h}" href="data:image/png;base64,${Buffer.from(png).toString('base64')}"/>`;

@@ -1,7 +1,7 @@
 {
   "name": "logomarks",
   "version": "0.1.0",
-  "description": "Check logomarks the way the Logomarks set is checked: fit to the 512 grid, specks, pin-holes, slivers, clipping, even gaps and 32 px features; the nearest of 1,400+ live marks; and review sheets for an AI or a person to look at. Pure JS, resvg in WebAssembly.",
+  "description": "Check logomarks the way the Logomarks set is checked (fit, specks, pin-holes, slivers, clipping, gaps, 32 px features, the nearest of 1,400+ live marks, review sheets), then build a brand on one: the mark's files, a free starter kit (favicons, lockups, palette, social images, brand sheet), mockups and covers. Pure JS, resvg in WebAssembly.",
   "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -41,7 +41,13 @@
     "design-review",
     "ai",
     "claude-code",
-    "cli"
+    "cli",
+    "brand-kit",
+    "favicon-generator",
+    "mockup",
+    "cover",
+    "og-image",
+    "palette"
   ],
   "author": "David Sherlock",
   "license": "MIT",
@@ -54,6 +60,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@arraypress/covers": "^1.1.0",
+    "@arraypress/mockups": "^0.1.1",
     "@resvg/resvg-wasm": "2.6.2",
     "polygon-clipping": "^0.15.7"
   },

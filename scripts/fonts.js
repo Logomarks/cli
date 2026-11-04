@@ -1,17 +1,29 @@
 #!/usr/bin/env node
 /**
- * Writes the sheet's typeface: IBM Plex Mono (SIL OFL 1.1), latin, regular
- * and semibold, from @fontsource WOFF files to plain TrueType, which resvg
- * reads. Run once; the TTFs are committed in `data/fonts/`.
+ * Writes the bundled typefaces (all SIL OFL 1.1), latin only, from
+ * @fontsource WOFF files to plain TrueType, which resvg reads, and one
+ * `OFL.txt` with every family's copyright and the licence. Run once; the TTFs
+ * are committed in `data/fonts/`.
  *
- *   node scripts/fonts.js <@fontsource/ibm-plex-mono folder>
+ *   node scripts/fonts.js <a node_modules folder holding @fontsource/*>
+ *
+ * The packages: ibm-plex-mono, inter, space-grotesk, instrument-sans,
+ * bricolage-grotesque and instrument-serif (`npm pack` them; nothing runs).
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { FONTS } from '../src/brand/fonts.js';
 
-const WEIGHTS = { Regular: 400, SemiBold: 600 };
+/** The @fontsource package a family comes from. */
+const pkgOf = (/** @type {string} */ name) => name.toLowerCase().replace(/\s+/g, '-');
+
+/** Each file to write: the brand faces, and Plex Mono regular for labels. */
+const JOBS = [
+	...Object.values(FONTS).map((f) => ({ file: f.file, pkg: pkgOf(f.name), weight: f.weight })),
+	{ file: 'IBMPlexMono-Regular.ttf', pkg: 'ibm-plex-mono', weight: 400 },
+];
 
 /**
  * A WOFF 1.0 file as an sfnt: the tables inflated and laid out with a fresh directory.
@@ -55,13 +67,24 @@ function woffToSfnt(woff) {
 
 const src = process.argv[2];
 if (!src) {
-	console.log('Usage: node scripts/fonts.js <path to @fontsource/ibm-plex-mono>');
+	console.log('Usage: node scripts/fonts.js <a node_modules folder holding @fontsource/*>');
 	process.exit(2);
 }
 const out = new URL('../data/fonts/', import.meta.url);
 fs.mkdirSync(out, { recursive: true });
-for (const [name, weight] of Object.entries(WEIGHTS)) {
-	const ttf = woffToSfnt(fs.readFileSync(path.join(src, 'files', `ibm-plex-mono-latin-${weight}-normal.woff`)));
-	fs.writeFileSync(new URL(`IBMPlexMono-${name}.ttf`, out), ttf);
-	console.log(`IBMPlexMono-${name}.ttf`, ttf.length, 'bytes');
+/** @type {Map<string, string>} */
+const notices = new Map();
+let licence = '';
+for (const { file, pkg, weight } of JOBS) {
+	const dir = path.join(src, '@fontsource', pkg);
+	const ttf = woffToSfnt(fs.readFileSync(path.join(dir, 'files', `${pkg}-latin-${weight}-normal.woff`)));
+	fs.writeFileSync(new URL(file, out), ttf);
+	console.log(file, ttf.length, 'bytes');
+	const text = fs.readFileSync(path.join(dir, 'LICENSE'), 'utf8');
+	const at = text.indexOf('This Font Software is licensed');
+	if (at < 0) throw new Error(`${pkg}: not the SIL Open Font License`);
+	notices.set(pkg, text.slice(0, at).trim());
+	licence ||= text.slice(at);
 }
+fs.writeFileSync(new URL('OFL.txt', out), `${[...notices.values()].join('\n')}\n\n${licence}`);
+console.log('OFL.txt:', [...notices.keys()].join(', '));

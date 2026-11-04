@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { main } from '../src/cli/index.js';
-import { fixturePath } from './helpers.js';
+import { fixturePath, pngSize, tempDir } from './helpers.js';
 
 /** Runs the CLI, capturing its output. */
 async function run(/** @type {string[]} */ argv) {
@@ -61,4 +61,42 @@ test('sheet writes a PNG', async () => {
 	assert.equal(json.marks.length, 2);
 	assert.equal(json.marks[0].ok, false);
 	assert.equal(r.code, 1);
+});
+
+test('get: SVG to stdout, a PNG to a file, a miss exits 2 with a suggestion', async () => {
+	const svg = await run(['get', 'hex-gem', '--color', '#ff5c3a']);
+	assert.equal(svg.code, 0);
+	assert.match(svg.out, /^<svg[^>]+fill="#FF5C3A"/);
+	const out = path.join(tempDir(), 'hex.png');
+	const png = await run(['get', 'Hex', 'Gem', '--size', '64', '-o', out, '--json']);
+	assert.equal(JSON.parse(png.out).format, 'png');
+	assert.deepEqual(pngSize(fs.readFileSync(out)), { width: 64, height: 64 });
+	const miss = await run(['get', 'hexgem']);
+	assert.equal(miss.code, 2);
+	assert.match(miss.err, /did you mean hex-gem/);
+	assert.equal((await run(['get', 'hex-gem', '--format', 'png'])).code, 2);
+	assert.equal((await run(['get', 'hex-gem', '--color', 'red'])).code, 2);
+});
+
+test('kit writes the folder', async () => {
+	const dir = path.join(tempDir(), 'kit');
+	const r = await run(['kit', 'hex-gem', '--name', 'Hexa Labs', '--color', '#2E4BFF', '--font', 'Instrument Serif', '-o', dir, '--json']);
+	assert.equal(r.code, 0);
+	const json = JSON.parse(r.out);
+	assert.equal(json.font.id, 'instrument-serif');
+	for (const f of json.files) assert.ok(fs.existsSync(path.join(dir, f)), f);
+	assert.equal((await run(['kit', 'hex-gem', '--font', 'comic-sans'])).code, 2);
+});
+
+test('mockup and cover write PNGs; bad choices exit 2', async () => {
+	const dir = tempDir();
+	const m = await run(['mockup', 'hex-gem', '--object', 'mug', '--base', 'black', '--size', '300', '-o', path.join(dir, 'mug.png'), '--json']);
+	assert.equal(m.code, 0);
+	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'mug.png'))), { width: 300, height: 300 });
+	assert.equal((await run(['mockup', 'hex-gem', '--object', 'rocket'])).code, 2);
+	assert.equal((await run(['mockup', 'hex-gem', '--object', 'card', '--layout', 'hand'])).code, 2);
+	const c = await run(['cover', fixturePath('split-block'), '--recipe', 'stripes', '--title', 'Hello', '--width', '600', '-o', path.join(dir, 'cover.png')]);
+	assert.equal(c.code, 0);
+	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'cover.png'))), { width: 600, height: 315 });
+	assert.equal((await run(['cover', 'hex-gem', '--recipe', 'nope'])).code, 2);
 });

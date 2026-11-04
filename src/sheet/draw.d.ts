@@ -6,6 +6,8 @@ export interface TextStyle {
 	/** 400 or 600 (400). */
 	weight?: number;
 	anchor?: 'start' | 'middle' | 'end';
+	/** A bundled face's family (IBM Plex Mono, semibold at 600). */
+	font?: string;
 }
 
 /** Text made safe for XML. */
@@ -18,3 +20,7 @@ export function panel(x: number, y: number, w: number, h: number, fill: string, 
 export function mark(svg: string, x: number, y: number, size: number, color: string): string;
 /** A PNG placed at a size, scaled by nearest neighbour so its pixels show. */
 export function pixels(png: Uint8Array, x: number, y: number, size: number): string;
+/** An SVG (with a `viewBox`) placed in a box, scaled to fit and centred. */
+export function nest(svg: string, x: number, y: number, w: number, h: number): string;
+/** A PNG placed in a box, smoothly scaled. */
+export function image(png: Uint8Array, x: number, y: number, w: number, h: number): string;

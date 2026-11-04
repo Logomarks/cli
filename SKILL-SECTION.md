@@ -17,3 +17,23 @@ npx logomarks sheet out/*.svg -o sheet.png  # one review card per mark
    and beside its three nearest live marks. Too close (amber) means compare the two by eye; a near-copy (red) is cut,
    and so is the same trick as an existing mark even when it scores low.
 4. Re-run until `check` exits 0, then deliver.
+
+## Build on a mark
+
+Once a mark is chosen (a live slug, or your own `.svg` that passes `check`):
+
+```bash
+npx logomarks get hex-gem -o mark.svg                         # the file (CC0); --color '#hex', --size 512 -o mark.png
+npx logomarks kit hex-gem --name "Brand" --color '#hex' --font space-grotesk -o brand/
+npx logomarks mockup hex-gem --name "Brand" --color '#hex' --object tee -o tee.png
+npx logomarks cover hex-gem --recipe aurora --title "Launch" --color '#hex' -o cover.png
+```
+
+- `kit` writes the mark (SVG, PNG 16–1024, on light and dark), favicons (`.ico`, `apple-touch-icon.png`, manifest; the
+  `<head>` lines are in `brand.json` → `head`), lockups, `colors/palette.css`, social images and `brand.json`. Open
+  `brand-sheet.png` and look at it before handing the kit over: a light brand colour gets a darker mark on light grounds
+  (it must clear 3:1), and its text colours clear AA.
+- Fonts: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono` (all OFL).
+- `mockup --object`: card, letterhead, ticket, lanyard, sticker, tote, tee, hoodie, cap, mug, bag, box, poster, vinyl,
+  cd, cassette, phone, laptop, billboard, shopfront. `--base black` changes a garment's or mug's colour.
+- `cover --recipe`: mark, gradient, tile, stripes, aurora, grid, cutout. `--aspect og` (default), `1:1`, `16:9`.

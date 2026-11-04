@@ -3,7 +3,9 @@
  *
  * Check logomarks the way the Logomarks set is checked: the house rules
  * (`check`, `fix`), the nearest live marks (`similar`), and review cards to
- * look at (`sheet`). The same functions run the `logomarks` command.
+ * look at (`sheet`). Then build a brand on one: the mark itself (`loadMark`,
+ * `paint`, `markPng`), a starter kit (`kit`), mockups (`mockup`) and covers
+ * (`cover`). The same functions run the `logomarks` command.
  */
 
 export { check, fix } from './checks/index.js';
@@ -13,3 +15,11 @@ export { loadIndex } from './similar/store.js';
 export { sheet } from './sheet/index.js';
 export { fitMark } from './svg/fit.js';
 export * as rules from './rules.js';
+export { loadMark, findMark, paint, markPng, MarkNotFound } from './brand/mark.js';
+export { palette, parseColor, contrast } from './brand/color.js';
+export { lockup } from './brand/lockup.js';
+export { artwork } from './brand/artwork.js';
+export { FONTS } from './brand/fonts.js';
+export { kit } from './kit/index.js';
+export { mockup, OBJECTS } from './mockup/index.js';
+export { cover, RECIPES } from './cover/index.js';
