@@ -30,6 +30,24 @@ export function initRenderer() {
 }
 
 /**
+ * The bundled typefaces' bytes (read once).
+ *
+ * @returns {Uint8Array[]} One per file.
+ */
+const bundledFonts = () => (fonts ??= fontFiles().map((u) => new Uint8Array(fs.readFileSync(u))));
+
+/**
+ * Loads the WebAssembly module and reads the typefaces now, so the first
+ * render of a long-lived process (the MCP server) is as quick as the rest.
+ *
+ * @returns {Promise<void>} Resolves when both are ready.
+ */
+export async function warmRenderer() {
+	bundledFonts();
+	await initRenderer();
+}
+
+/**
  * resvg's font options: the bundled typefaces, or none.
  *
  * @param {boolean} text Whether the SVG has text.
@@ -37,8 +55,7 @@ export function initRenderer() {
  */
 function fontOptions(text) {
 	if (!text) return { loadSystemFonts: false };
-	fonts ??= fontFiles().map((u) => new Uint8Array(fs.readFileSync(u)));
-	return { fontBuffers: fonts, defaultFontFamily: LABEL_FONT, monospaceFamily: LABEL_FONT };
+	return { fontBuffers: bundledFonts(), defaultFontFamily: LABEL_FONT, monospaceFamily: LABEL_FONT };
 }
 
 /**

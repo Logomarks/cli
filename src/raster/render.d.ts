@@ -28,6 +28,8 @@ export interface Outlined {
 
 /** Loads the WebAssembly renderer (once); every render awaits it. */
 export function initRenderer(): Promise<void>;
+/** Loads the renderer and reads the typefaces up front (for long-lived processes). */
+export function warmRenderer(): Promise<void>;
 /** Renders an SVG with resvg (WebAssembly). */
 export function render(svg: string, o?: RenderOptions): Promise<Rendered>;
 /** Sets an SVG's text (in the bundled typefaces) as outlines, and measures it. */

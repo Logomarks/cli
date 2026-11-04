@@ -5,14 +5,13 @@
  * 2 usage.
  */
 
-import fs from 'node:fs';
 import { COMMANDS } from './commands/index.js';
 import { parseArgs, UsageError } from './args.js';
 import { FONTS } from '../brand/fonts.js';
 import { OBJECTS } from '../mockup/index.js';
 import { RECIPES } from '../cover/index.js';
+import { VERSION as version } from '../util/version.js';
 
-const { version } = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'));
 
 /**
  * Names as an indented list in the help's right-hand column, wrapped.
@@ -44,6 +43,11 @@ Check
   logomarks sheet <file.svg…> -o sheet.png review cards: large on dark and light, 32 and 16 px,
                                            nearest live marks, check badges
 
+Find
+  logomarks find <words…>                  search the live set: "fox", "calm hexagon", "coffee"
+      --style badge --tag round,symmetric --industry fintech --letter K --top 20
+                                           no words or filters: every style, tag, mood and industry
+
 Build (a live mark by slug or name, or your own .svg)
   logomarks get <slug|name> [-o file]      a live mark's SVG (CC0) to stdout or a file
       --color #hex  --size 512  --format svg|png
@@ -60,6 +64,11 @@ ${list(Object.keys(RECIPES))}
       --label --color --aspect og|1:1|16:9 --width 1200
 
   Every verb takes --json for machine output. -o file.svg writes a mockup's or cover's SVG.
+
+Agents
+  logomarks mcp                            the same as MCP tools on stdio (Claude Code, Codex, Cursor):
+                                           find_marks, get_mark, check_mark, similar_marks, review_sheet,
+                                           brand_kit, mockup, cover
 
 Exit codes: 0 pass, 1 fail, 2 usage.
 Rules: 512 canvas, longest side 448, centred; filled paths in currentColor; one gap (22); nothing under 10.

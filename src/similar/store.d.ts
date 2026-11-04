@@ -1,5 +1,23 @@
+/** What a live mark is: what `findMarks` searches. */
+export interface MarkAbout {
+	/** Shape tags: round, square, letter, number, symmetric, radial, solid, light, wide, tall, new. */
+	tags: string[];
+	/** The board it is in (bold, archive, geometric, grid). */
+	collection: string;
+	/** Its family's style (letter, badge, iso, line, grid, glitch, animal …). */
+	style: string;
+	/** Its mood words (minimal, technical, calm, premium …). */
+	mood: string[];
+	/** The letter or number it shows, for letter marks. */
+	letter?: string;
+	/** What it looks like, in a sentence. */
+	description: string;
+	/** The kinds of business it suits, best fit first (may be empty). */
+	industries: string[];
+}
+
 /** A live mark in the index. */
-export interface IndexedMark {
+export interface IndexedMark extends MarkAbout {
 	slug: string;
 	name: string;
 	/** The mark's SVG. */
@@ -27,7 +45,7 @@ export interface MarkIndex {
 
 /** What an index is written from. */
 export interface IndexInput {
-	marks: { slug: string; name: string; svg: string }[];
+	marks: ({ slug: string; name: string; svg: string } & MarkAbout)[];
 	/** One 48 px coverage per mark (values 0–1), before the blur. */
 	coverages: ArrayLike<number>[];
 	letters: { mark: number; kind: 'hole' | 'ink'; sig: ArrayLike<number> }[];

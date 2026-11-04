@@ -1,6 +1,6 @@
 # logomarks
 
-Check a logomark the way the [Logomarks](https://logomarks.ai) set is checked: the fit to the 512 grid, stray specks, pin-holes and slivers, clipping, even gaps and features that survive 32 px; the nearest of the live marks; and a review sheet to look at. Then build a brand on one: the mark's files, a starter kit, mockups and covers. Built for AI coding agents (Claude Code, Codex, Cursor) and the people working with them. Pure JS: resvg in WebAssembly, no native binaries, works offline.
+Check a logomark the way the [Logomarks](https://logomarks.ai) set is checked: the fit to the 512 grid, stray specks, pin-holes and slivers, clipping, even gaps and features that survive 32 px; the nearest of the live marks; and a review sheet to look at. Then build a brand on one: the mark's files, a starter kit, mockups and covers. Built for AI coding agents (Claude Code, Codex, Cursor) and the people working with them, as a CLI and an MCP server. Pure JS: resvg in WebAssembly, no native binaries, works offline.
 
 ```bash
 npx logomarks check mark.svg              # findings with ids, severities and boxes; exit 1 on errors
@@ -10,6 +10,7 @@ npx logomarks sheet marks/*.svg -o sheet.png
 ```
 
 ```bash
+npx logomarks find calm hexagon                               # search the live set; --style --tag --industry --letter
 npx logomarks get hex-gem --color '#ff5c3a' > mark.svg        # a live mark (CC0); --size 512 -o mark.png
 npx logomarks kit hex-gem --name "Hexa Labs" --color '#ff5c3a' --font space-grotesk -o hexa/
 npx logomarks mockup hex-gem --name "Hexa Labs" --object card -o card.png
@@ -49,6 +50,15 @@ A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Ev
 
 `-o file.svg` writes a mockup's or cover's SVG instead of the PNG.
 
+## MCP
+
+`logomarks mcp` runs the same functions as MCP tools on stdio, locally: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet` (the sheet as an image), `brand_kit` (writes the folder, returns its path and the brand sheet), `mockup` and `cover` (a preview image; `out` writes the full size). Relative paths resolve against the server's working folder.
+
+```bash
+claude mcp add logomarks -- npx -y logomarks mcp        # Claude Code (or install the logomarks plugin: skills too)
+codex mcp add logomarks -- npx -y logomarks mcp         # Codex (~/.codex/config.toml → [mcp_servers.logomarks])
+```
+
 ## API
 
 | Export | |
@@ -57,13 +67,15 @@ A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Ev
 | `fix(svg)` | The mark refitted, or `null` when there's nothing safe to fix. |
 | `similar(svg, { top, letters, exclude })` | `[{ slug, name, score, verdict }]`, closest first. |
 | `sheet([{ name, svg }])` | `{ png, svg, marks }`. |
+| `findMarks(query, { style, tags, industry, letter, limit })`, `facets()` | `{ total, marks }`, most words matched first; the filters' values. |
 | `fitMark(svg)`, `loadIndex()`, `FINDINGS`, `rules` | The fitter, the live set, every finding id, the house rules. |
 | `loadMark(ref)`, `paint(svg, color)`, `markPng(svg, { size, color })` | A mark by slug, name or file; as a file in a colour; as a PNG. |
 | `kit({ mark, name, color, font })` | `{ brand, files, sheet }`: every file in memory. |
 | `mockup({ mark, object, … })`, `cover({ mark, recipe, … })` | `{ png, svg, width, height }`. |
 | `palette(hex)`, `lockup(o)`, `artwork(o)`, `FONTS`, `OBJECTS`, `RECIPES` | The parts they're built from. |
+| `createServer({ cwd })`, `TOOLS` from `logomarks/mcp` | The MCP server (not connected) and its tools. |
 
-The live set is bundled (`data/index.bin`, rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque and Instrument Serif for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
+The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque and Instrument Serif for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
 
 Free and open. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
 

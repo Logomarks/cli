@@ -32,3 +32,12 @@ void (async () => {
 	const c: Cover = await cover({ mark: m, recipe: 'aurora', title: 'Hello', aspect: '16:9', width: 1600 });
 	console.log(png.length, l.width, k.brand.colors.scale['500'], mock.png.length, c.svg.length, FONTS.inter.family, Object.keys(OBJECTS), RECIPES.mark.about, file);
 })();
+
+import { findMarks, facets, type FindResult, type Facets, type IndexedMark } from '../src/index.js';
+import { createServer, TOOLS, INSTRUCTIONS, type Tool } from 'logomarks/mcp';
+const found: FindResult = findMarks('fox', { style: 'animal', tags: ['solid'], industry: 'pets', letter: 'F', limit: 5 });
+const f: Facets = facets();
+const indexed: IndexedMark = loadIndex().marks[0];
+const tools: Tool<never>[] = TOOLS;
+const server = createServer({ cwd: '/tmp' });
+console.log(found.marks[0]?.url, f.styles.letter, indexed.description, indexed.letter, tools[0].name, INSTRUCTIONS.length, server.isConnected());

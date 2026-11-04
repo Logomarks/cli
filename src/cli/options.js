@@ -5,12 +5,12 @@
  * a typeface, a whole number; and writing a file, folders made as needed.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
 import { UsageError } from './args.js';
 import { loadMark, MarkNotFound } from '../brand/mark.js';
 import { parseColor } from '../brand/color.js';
 import { fontId, FONTS } from '../brand/fonts.js';
+
+export { writeFile } from '../util/files.js';
 
 /**
  * The mark the positionals name: a live slug or name (words may be unquoted), or an SVG file.
@@ -72,15 +72,4 @@ export function intArg(name, value, min, max) {
 	const n = Number(value);
 	if (!Number.isInteger(n) || n < min || n > max) throw new UsageError(`--${name} takes a whole number from ${min} to ${max}`);
 	return n;
-}
-
-/**
- * Writes a file, making its folder.
- *
- * @param {string} file Where.
- * @param {string | Uint8Array} data What.
- */
-export function writeFile(file, data) {
-	fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
-	fs.writeFileSync(file, data);
 }

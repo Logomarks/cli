@@ -100,3 +100,14 @@ test('mockup and cover write PNGs; bad choices exit 2', async () => {
 	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'cover.png'))), { width: 600, height: 315 });
 	assert.equal((await run(['cover', 'hex-gem', '--recipe', 'nope'])).code, 2);
 });
+
+test('find: words and filters, facets with nothing to search by, 1 when nothing matches', async () => {
+	const r = await run(['find', 'fox', '--top', '2', '--json']);
+	assert.equal(r.code, 0);
+	assert.equal(JSON.parse(r.out).marks[0].slug, 'fox');
+	assert.equal(JSON.parse(r.out).marks.length, 2);
+	const k = JSON.parse((await run(['find', '--style', 'badge', '--letter', 'K', '--json'])).out);
+	assert.ok(k.marks.every((/** @type {{ slug: string }} */ m) => m.slug.includes('badge-k')));
+	assert.ok(JSON.parse((await run(['find', '--json'])).out).styles.letter > 0);
+	assert.equal((await run(['find', 'zzqx'])).code, 1);
+});

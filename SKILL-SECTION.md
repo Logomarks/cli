@@ -20,7 +20,7 @@ npx logomarks sheet out/*.svg -o sheet.png  # one review card per mark
 
 ## Build on a mark
 
-Once a mark is chosen (a live slug, or your own `.svg` that passes `check`):
+Once a mark is chosen (a live slug, found with `npx logomarks find calm hexagon`, or your own `.svg` that passes `check`):
 
 ```bash
 npx logomarks get hex-gem -o mark.svg                         # the file (CC0); --color '#hex', --size 512 -o mark.png

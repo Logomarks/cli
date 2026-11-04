@@ -1,9 +1,10 @@
 /**
  * @module logomarks/similar/store
  *
- * The bundled index of live marks: each mark's slug, name and SVG, its 48 px
- * coverage (the outline signature before its blur), and for badges and
- * letter marks a letter signature. One brotli-compressed file, built by
+ * The bundled index of live marks: each mark's slug, name and SVG, what it is
+ * (tags, collection, style, mood, letter, description, industries: what
+ * `findMarks` searches), its 48 px coverage (the outline signature before its
+ * blur), and for badges and letter marks a letter signature. One brotli-compressed file, built by
  * `npm run index` from the Logomarks data, so `similar` and `sheet` work
  * offline. Layout: a 4-byte JSON length, the JSON (marks and letters), then
  * the signature bytes.
@@ -18,7 +19,7 @@ import { blur } from './signature.js';
 export const INDEX_FILE = new URL('../../data/index.bin', import.meta.url);
 
 /** The file format's version. */
-const VERSION = 1;
+const VERSION = 2;
 
 /** Letter signatures are quarters (2×2 supersampling): stored ×4. */
 const QUARTERS = 4;
@@ -39,7 +40,7 @@ export function writeIndex({ marks, coverages, letters }, file = INDEX_FILE) {
 		built: new Date().toISOString().slice(0, 10),
 		size: SIMILAR.size,
 		letterSize: LETTERS.size,
-		marks: marks.map((m) => [m.slug, m.name, m.svg]),
+		marks: marks.map(({ slug, name, svg, ...about }) => [slug, name, svg, about]),
 		letters: letters.map((l) => [l.mark, l.kind]),
 	}));
 	const length = Buffer.alloc(4);
@@ -76,7 +77,7 @@ export function loadIndex(file = INDEX_FILE) {
 	/** @type {import('./store.js').MarkIndex} */
 	const index = {
 		built: raw.built,
-		marks: raw.marks.map((/** @type {[string, string, string]} */ [slug, name, svg]) => ({ slug, name, svg, outline: blur(take(S, 255), raw.size) })),
+		marks: raw.marks.map((/** @type {[string, string, string, import('./store.js').MarkAbout]} */ [slug, name, svg, about]) => ({ slug, name, svg, ...about, outline: blur(take(S, 255), raw.size) })),
 		letters: raw.letters.map((/** @type {[number, 'hole' | 'ink']} */ [mark, kind]) => ({ mark, kind, sig: take(L, QUARTERS) })),
 	};
 	cache.set(key, index);

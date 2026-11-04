@@ -11,6 +11,8 @@ import * as get from './get.js';
 import * as kit from './kit.js';
 import * as mockup from './mockup.js';
 import * as cover from './cover.js';
+import * as find from './find.js';
+import * as mcp from './mcp.js';
 
 /** Every verb the CLI runs. */
-export const COMMANDS = { check, similar, sheet, get, kit, mockup, cover };
+export const COMMANDS = { check, similar, sheet, find, get, kit, mockup, cover, mcp };
