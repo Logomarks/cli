@@ -1,3 +1,5 @@
+import type { Packed } from '@arraypress/search';
+
 /** What a live mark is: what `findMarks` searches. */
 export interface MarkAbout {
 	/** Shape tags: round, square, letter, number, symmetric, radial, solid, light, wide, tall, new. */
@@ -43,6 +45,8 @@ export interface MarkIndex {
 	built: string;
 	marks: IndexedMark[];
 	letters: IndexedLetter[];
+	/** The board's search over `marks`, in the same order (a packed @arraypress/search index); only the bundled index has it. */
+	search?: Packed;
 }
 
 /** What an index is written from. */
@@ -51,6 +55,8 @@ export interface IndexInput {
 	/** One 48 px coverage per mark (values 0–1), before the blur. */
 	coverages: ArrayLike<number>[];
 	letters: { mark: number; kind: 'hole' | 'ink'; sig: ArrayLike<number> }[];
+	/** The board's search over `marks`, packed. */
+	search: Packed;
 }
 
 /** Where the bundled index lives. */

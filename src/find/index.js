@@ -1,44 +1,42 @@
 /**
  * @module logomarks/find
  *
- * Searches the bundled live set: free words (scored against each mark's
- * slug, name, style, tags, mood, letter, industries and description), and
- * exact filters (style, tags, industry, letter). The vocabulary to filter
- * by comes from the set itself (`facets`).
+ * Searches the bundled live set the way the board on logomarks.ai does (its
+ * packed @arraypress/search index): every word must be found, typed at the
+ * start of a word or as a synonym (UK and US trades: "solicitor" finds the
+ * lawyers' marks), best first (a word of the name or a search word, then an
+ * industry, then elsewhere). Filler words (`a`, `for`, `logo` …) are left out.
+ * Exact filters (style, tags, industry, letter) narrow it; the vocabulary to
+ * filter by comes from the set itself (`facets`).
  */
 
+import { unpack, facets as count } from '@arraypress/search';
 import { loadIndex } from '../similar/store.js';
 import { MARK_URL } from '../brand/mark.js';
 
-/** How much a word scores where it is found. */
-const WEIGHT = { name: 4, label: 3, description: 1 };
-
 /** Words a brief is full of that say nothing about a mark. */
-const STOP = new Set(['a', 'an', 'and', 'the', 'for', 'of', 'with', 'in', 'on', 'to', 'my', 'our', 'logo', 'logos', 'mark', 'marks', 'icon', 'brand', 'company', 'something', 'like']);
+const STOP = ['a', 'an', 'and', 'the', 'for', 'of', 'with', 'in', 'on', 'to', 'my', 'our', 'logo', 'logos', 'mark', 'marks', 'icon', 'brand', 'company', 'something', 'like'];
 
 /** How many marks a search returns when no limit is given. */
 export const DEFAULT_LIMIT = 20;
 
-/**
- * Text as lower-case words.
- *
- * @param {string} s The text.
- * @returns {string[]} Its words.
- */
-const words = (s) => s.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+/** Each index's search, built once. */
+const searches = new WeakMap();
 
 /**
- * How well one query word fits a mark: the best place it is found.
+ * An index's search (the board's, with filler words left out).
  *
- * @param {string} word The word.
- * @param {import('../similar/store.js').IndexedMark} m The mark.
- * @returns {number} Its score (0 when it isn't found).
+ * @param {import('../similar/store.js').MarkIndex} index The live set.
+ * @returns {import('@arraypress/search').Search<Record<string, unknown>>} Its search.
+ * @throws {Error} When the index has no search (only the bundled one does).
  */
-function wordScore(word, m) {
-	const starts = (/** @type {string[]} */ list) => list.some((w) => w === word || (word.length > 2 && w.startsWith(word)));
-	if (starts(words(`${m.slug} ${m.name}`))) return WEIGHT.name;
-	if (starts([m.style, ...m.tags, ...m.mood, ...m.industries.flatMap(words), ...(m.letter ? [m.letter.toLowerCase()] : [])])) return WEIGHT.label;
-	return starts(words(m.description)) ? WEIGHT.description : 0;
+function searchOf(index) {
+	let s = searches.get(index);
+	if (!s) {
+		if (!index.search) throw new Error('this index has no search: findMarks needs the bundled index (npm run index)');
+		searches.set(index, (s = unpack(index.search, { stopWords: STOP })));
+	}
+	return s;
 }
 
 /**
@@ -65,27 +63,17 @@ const found = ({ slug, name, style, tags, mood, letter, industries, description 
 	({ slug, name, style, tags, mood, ...(letter && { letter }), industries, description, url: MARK_URL + slug });
 
 /**
- * Searches the live set. A mark matches when any query word is found in it;
- * the marks with the most words found come first, then by where (slug or
- * name, then labels, then description). Filler words (`a`, `for`, `logo` …)
- * are left out. With no words, the filtered marks come back in the set's
- * order.
+ * Searches the live set as the board does: a mark matches when every query
+ * word (or synonym phrase) is found in it; the best come first, ties in the
+ * board's order. With no words, the filtered marks come back in that order.
  *
- * @param {string} [query] Free words (`fox`, `calm letter k`, `coffee`).
+ * @param {string} [query] Free words (`fox`, `calm letter k`, `solicitor`).
  * @param {import('./index.js').FindOptions} [o] Filters and the limit.
  * @returns {import('./index.js').FindResult} The total that matched and the first `limit`.
  */
 export function findMarks(query = '', { index = loadIndex(), limit = DEFAULT_LIMIT, ...filters } = {}) {
-	const q = [...new Set(words(query))].filter((w) => !STOP.has(w));
-	const hits = [];
-	for (const m of index.marks) {
-		if (!passes(m, filters)) continue;
-		const scores = q.map((w) => wordScore(w, m)).filter(Boolean);
-		if (q.length && !scores.length) continue;
-		hits.push({ m, matched: scores.length, score: scores.reduce((a, b) => a + b, 0) });
-	}
-	hits.sort((a, b) => b.matched - a.matched || b.score - a.score);
-	return { total: hits.length, marks: hits.slice(0, limit).map((h) => found(h.m)) };
+	const r = searchOf(index).search(query, { filter: (_, i) => passes(index.marks[i], filters), limit });
+	return { total: r.total, marks: r.hits.map((h) => found(index.marks[h.index])) };
 }
 
 /**
@@ -95,15 +83,6 @@ export function findMarks(query = '', { index = loadIndex(), limit = DEFAULT_LIM
  * @returns {import('./index.js').Facets} Styles, tags, moods and industries.
  */
 export function facets(index = loadIndex()) {
-	/** @type {Record<keyof import('./index.js').Facets, Map<string, number>>} */
-	const counts = { styles: new Map(), tags: new Map(), moods: new Map(), industries: new Map() };
-	const add = (/** @type {Map<string, number>} */ map, /** @type {string[]} */ values) => values.forEach((v) => map.set(v, (map.get(v) ?? 0) + 1));
-	for (const m of index.marks) {
-		add(counts.styles, [m.style]);
-		add(counts.tags, m.tags);
-		add(counts.moods, m.mood);
-		add(counts.industries, m.industries);
-	}
-	const sorted = (/** @type {Map<string, number>} */ map) => Object.fromEntries([...map].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
-	return { styles: sorted(counts.styles), tags: sorted(counts.tags), moods: sorted(counts.moods), industries: sorted(counts.industries) };
+	const { style, tags, mood, industries } = count(index.marks, ['style', 'tags', 'mood', 'industries']);
+	return { styles: style, tags, moods: mood, industries };
 }
