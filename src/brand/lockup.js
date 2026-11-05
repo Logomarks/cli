@@ -8,7 +8,7 @@
  * mark's height clear all round. The name is outlines: the SVG needs no font.
  */
 
-import { shapes, bounds } from '@logomarks/marks-kit/svg';
+import { shapes, bounds } from '@logomarks/core/svg';
 import { markBody } from './mark.js';
 import { typeset } from './type.js';
 import { round as r } from '../util/round.js';

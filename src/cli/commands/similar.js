@@ -12,7 +12,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { nearestAll } from '@logomarks/marks-kit/similar';
+import { nearestAll } from '@logomarks/core/similar';
 import { similar } from '../../similar/nearest.js';
 import { loadIndex } from '../../similar/store.js';
 import { folderIndex, indexOf, joinIndexes } from '../../similar/folder.js';

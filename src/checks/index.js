@@ -6,8 +6,8 @@
  * one safe repair, refitting to the grid.
  */
 
-import { shapes, bounds } from '@logomarks/marks-kit/svg';
-import { fitMark } from '@logomarks/marks-kit/fit';
+import { shapes, bounds } from '@logomarks/core/svg';
+import { fitMark } from '@logomarks/core/fit';
 import { finding } from './finding.js';
 import { fitFindings } from './fit.js';
 import { speckFindings } from './specks.js';

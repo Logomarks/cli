@@ -1,4 +1,4 @@
-import type { Box, Point } from '@logomarks/marks-kit/geometry';
+import type { Box, Point } from '@logomarks/core/geometry';
 
 /** How much a finding matters: errors fail the check; warnings fail it with `--strict`; notes never do. */
 export type Severity = 'error' | 'warning' | 'info';
