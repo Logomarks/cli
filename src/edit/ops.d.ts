@@ -1,4 +1,4 @@
-import type { Doc } from '@logomarks/vector-editor';
+import type { Doc } from '@logomarks/editor';
 import type { Edited, PartInfo } from './doc.js';
 
 /** An op's name. */

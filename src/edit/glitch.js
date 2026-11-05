@@ -1,12 +1,12 @@
 /**
  * @module logomarks/edit/glitch
  *
- * A glitch edition of a mark in one step (`@logomarks/vector-editor`'s
+ * A glitch edition of a mark in one step (`@logomarks/editor`'s
  * `glitch`): cut with the house gap and the pieces slid, the cuts placed by
  * a seed, so the same seed gives the same bytes.
  */
 
-import { glitch, GLITCH_DEFAULTS } from '@logomarks/vector-editor/ops';
+import { glitch, GLITCH_DEFAULTS } from '@logomarks/editor/ops';
 import { toDoc, finish } from './doc.js';
 
 /** The presets by the names the CLI and the tools use, and the editor's own. */

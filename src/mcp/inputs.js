@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
-import { fitMark } from '@logomarks/marks-kit/fit';
+import { fitMark } from '@logomarks/core/fit';
 import { PLATFORMS, STYLE_IDS } from '@logomarks/brand-kit';
 import { loadMark } from '../brand/mark.js';
 import { parseColor } from '../util/color.js';

@@ -2,7 +2,7 @@
  * @module logomarks/edit/ops
  *
  * `edit`: a short list of JSON ops run in order on a mark, each one of
- * `@logomarks/vector-editor`'s pure ops. `parts` are indices in drawing
+ * `@logomarks/editor`'s pure ops. `parts` are indices in drawing
  * order as `listParts` gives them, at the time the op runs (a delete
  * renumbers what follows); none means every part.
  */
@@ -10,7 +10,7 @@
 import {
 	deleteParts, moveParts, rotateParts, scaleParts, flipParts, roundParts, offsetParts,
 	setSymmetry, bakeSymmetry, canvasCenter, setPartAttributes, booleanParts,
-} from '@logomarks/vector-editor/ops';
+} from '@logomarks/editor/ops';
 import { parseColor } from '../util/color.js';
 import { toDoc, partIds, listParts, finish } from './doc.js';
 

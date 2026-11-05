@@ -26,6 +26,6 @@ import { createServer, TOOLS } from 'logomarks/mcp';
 | `parseColor`, `FONTS`, `OBJECTS`, `RECIPES` | The parts they're built from. |
 | `createServer({ cwd })`, `TOOLS` from `logomarks/mcp` | The MCP server (not connected) and its tools. |
 
-The palette, lockups and artwork are [`@logomarks/brand-kit`](https://github.com/Logomarks/brand-kit)'s (`palette`, `lockup`, `artwork`), and the edits are [`@logomarks/vector-editor`](https://github.com/Logomarks/vector-editor)'s.
+The palette, lockups and artwork are [`@logomarks/brand-kit`](https://github.com/Logomarks/brand-kit)'s (`palette`, `lockup`, `artwork`), and the edits are [`@logomarks/editor`](https://github.com/Logomarks/editor)'s.
 
 The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque and Instrument Serif for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).

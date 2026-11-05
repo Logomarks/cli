@@ -6,22 +6,22 @@
  * curve-keeping booleans, or simply placed.
  */
 
-import { insertSvg, newParts, duplicateParts, deleteParts, booleanParts, scaleParts, rotateParts, flipParts, moveParts } from '@logomarks/vector-editor/ops';
-import { parts } from '@logomarks/vector-editor/model';
+import { insertSvg, newParts, duplicateParts, deleteParts, booleanParts, scaleParts, rotateParts, flipParts, moveParts } from '@logomarks/editor/ops';
+import { parts } from '@logomarks/editor/model';
 import { toDoc, finish } from './doc.js';
 
 /** The ways two marks combine. */
 export const COMBINE_OPS = /** @type {const} */ (['union', 'subtract', 'intersect', 'exclude', 'place']);
 
 /** The ids of a document's parts. */
-const idsOf = (/** @type {import('@logomarks/vector-editor').Doc} */ doc) => parts(doc).map((p) => p.id);
+const idsOf = (/** @type {import('@logomarks/editor').Doc} */ doc) => parts(doc).map((p) => p.id);
 
 /**
  * Copies of some parts, in place.
  *
- * @param {import('@logomarks/vector-editor').Doc} doc The document.
+ * @param {import('@logomarks/editor').Doc} doc The document.
  * @param {string[]} ids The parts.
- * @returns {{ doc: import('@logomarks/vector-editor').Doc, ids: string[] }} The document with them, and the copies' ids.
+ * @returns {{ doc: import('@logomarks/editor').Doc, ids: string[] }} The document with them, and the copies' ids.
  */
 function copy(doc, ids) {
 	const next = duplicateParts(doc, ids);
@@ -33,10 +33,10 @@ function copy(doc, ids) {
  * boolean operand, so each takes fresh copies of the cutters); the cutters
  * are left as they were.
  *
- * @param {import('@logomarks/vector-editor').Doc} doc The document.
+ * @param {import('@logomarks/editor').Doc} doc The document.
  * @param {string[]} keep The parts to cut.
  * @param {string[]} cut The parts to cut with.
- * @returns {{ doc: import('@logomarks/vector-editor').Doc, ids: string[] }} The document, and what is left of `keep`.
+ * @returns {{ doc: import('@logomarks/editor').Doc, ids: string[] }} The document, and what is left of `keep`.
  */
 function cutOut(doc, keep, cut) {
 	const left = [];
@@ -49,7 +49,7 @@ function cutOut(doc, keep, cut) {
 	return { doc, ids: left };
 }
 
-/** Each boolean, from a document holding both marks' parts. @type {Record<string, (doc: import('@logomarks/vector-editor').Doc, a: string[], b: string[]) => import('@logomarks/vector-editor').Doc>} */
+/** Each boolean, from a document holding both marks' parts. @type {Record<string, (doc: import('@logomarks/editor').Doc, a: string[], b: string[]) => import('@logomarks/editor').Doc>} */
 const COMBINE = {
 	place: (doc) => doc,
 	union: (doc, a, b) => booleanParts(doc, 'union', [...a, ...b]),
@@ -71,10 +71,10 @@ const COMBINE = {
 /**
  * The second mark placed: scaled and turned about its own centre, flipped, then moved.
  *
- * @param {import('@logomarks/vector-editor').Doc} doc The document.
+ * @param {import('@logomarks/editor').Doc} doc The document.
  * @param {string[]} ids Its parts.
  * @param {import('./combine.js').Placement} t How.
- * @returns {import('@logomarks/vector-editor').Doc} The document.
+ * @returns {import('@logomarks/editor').Doc} The document.
  */
 function place(doc, ids, { scale = 1, rotate = 0, flip, x = 0, y = 0 } = {}) {
 	let d = scale === 1 ? doc : scaleParts(doc, ids, scale);
