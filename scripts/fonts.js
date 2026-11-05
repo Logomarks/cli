@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 /**
- * Writes the bundled typefaces (all SIL OFL 1.1), latin only, from
- * @fontsource WOFF files to plain TrueType, which resvg reads, and one
- * `OFL.txt` with every family's copyright and the licence. Run once; the TTFs
- * are committed in `data/fonts/`.
+ * Writes the bundled typefaces (all SIL OFL 1.1) as plain TrueType, which
+ * resvg reads, and one `OFL.txt` with every family's copyright and the
+ * licence. Run once; the TTFs are committed in `data/fonts/`.
  *
  *   node scripts/fonts.js <a node_modules folder holding @fontsource/*>
  *
- * The packages: ibm-plex-mono, inter, space-grotesk, instrument-sans,
- * bricolage-grotesque, instrument-serif, fraunces, cagliostro, limelight and
- * shrikhand (`npm pack` them; nothing runs).
+ * Most are Fontsource's latin subsets, unwrapped from WOFF: inter,
+ * space-grotesk, instrument-sans, bricolage-grotesque, instrument-serif,
+ * fraunces and shrikhand (`npm pack` them; nothing runs). The faces with a
+ * Reserved Font Name (UPSTREAM in `src/brand/fonts.js`: Cagliostro, Limelight,
+ * IBM Plex Mono) are fetched whole from google/fonts at a pinned commit, and
+ * each must match its sha256.
  */
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { FONTS } from '../src/brand/fonts.js';
+import { FONTS, UPSTREAM } from '../src/brand/fonts.js';
 
 /** The @fontsource package a family comes from. */
 const pkgOf = (/** @type {string} */ name) => name.toLowerCase().replace(/\s+/g, '-');
@@ -73,19 +76,50 @@ if (!src) {
 }
 const out = new URL('../data/fonts/', import.meta.url);
 fs.mkdirSync(out, { recursive: true });
+
+/**
+ * A pinned upstream file, checked against its sha256, and the `OFL.txt` beside it.
+ *
+ * @param {{ url: string, sha256: string }} pin Where it is, and its hash.
+ * @returns {Promise<{ ttf: Buffer, licence: string }>} The file, byte for byte, and its licence.
+ */
+async function upstream(pin) {
+	const get = async (/** @type {string} */ url) => {
+		const res = await fetch(url);
+		if (!res.ok) throw new Error(`${url}: ${res.status}`);
+		return Buffer.from(await res.arrayBuffer());
+	};
+	const ttf = await get(pin.url);
+	const sha = crypto.createHash('sha256').update(ttf).digest('hex');
+	if (sha !== pin.sha256) throw new Error(`${pin.url}: sha256 ${sha}, pinned ${pin.sha256}`);
+	return { ttf, licence: (await get(pin.url.replace(/[^/]+$/, 'OFL.txt'))).toString('utf8') };
+}
+
+/**
+ * A Fontsource latin subset as TrueType, and its licence.
+ *
+ * @param {string} pkg The @fontsource package.
+ * @param {number} weight The weight.
+ * @returns {{ ttf: Buffer, licence: string }} The file and its licence.
+ */
+function subset(pkg, weight) {
+	const dir = path.join(src, '@fontsource', pkg);
+	const ttf = woffToSfnt(fs.readFileSync(path.join(dir, 'files', `${pkg}-latin-${weight}-normal.woff`)));
+	return { ttf, licence: fs.readFileSync(path.join(dir, 'LICENSE'), 'utf8') };
+}
+
 /** @type {Map<string, string>} */
 const notices = new Map();
 let licence = '';
 for (const { file, pkg, weight } of JOBS) {
-	const dir = path.join(src, '@fontsource', pkg);
-	const ttf = woffToSfnt(fs.readFileSync(path.join(dir, 'files', `${pkg}-latin-${weight}-normal.woff`)));
-	fs.writeFileSync(new URL(file, out), ttf);
-	console.log(file, ttf.length, 'bytes');
-	const text = fs.readFileSync(path.join(dir, 'LICENSE'), 'utf8');
-	const at = text.indexOf('This Font Software is licensed');
+	const pin = UPSTREAM[/** @type {keyof typeof UPSTREAM} */ (file)];
+	const face = pin ? await upstream(pin) : subset(pkg, weight);
+	fs.writeFileSync(new URL(file, out), face.ttf);
+	console.log(file, face.ttf.length, 'bytes', pin ? '(upstream, sha256 ok)' : '(latin subset)');
+	const at = face.licence.indexOf('This Font Software is licensed');
 	if (at < 0) throw new Error(`${pkg}: not the SIL Open Font License`);
-	notices.set(pkg, text.slice(0, at).trim());
-	licence ||= text.slice(at);
+	notices.set(pkg, face.licence.slice(0, at).trim());
+	licence ||= face.licence.slice(at);
 }
 fs.writeFileSync(new URL('OFL.txt', out), `${[...notices.values()].join('\n')}\n\n${licence}`);
 console.log('OFL.txt:', [...notices.keys()].join(', '));

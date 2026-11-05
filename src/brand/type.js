@@ -28,7 +28,7 @@ const caps = new Map();
  */
 async function probe(text, font) {
 	const width = AT.x * 2 + SIZE * 1.5 * text.length;
-	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${SIZE * 4}"><text x="${AT.x}" y="${AT.y}" font-family="${font.family}" font-size="${SIZE}" letter-spacing="${font.tracking * SIZE}" xml:space="preserve">${esc(text)}</text></svg>`;
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${SIZE * 4}"><text x="${AT.x}" y="${AT.y}" font-family="${font.family}" font-weight="${font.weight}" font-size="${SIZE}" letter-spacing="${font.tracking * SIZE}" xml:space="preserve">${esc(text)}</text></svg>`;
 	const out = await outline(svg);
 	const paths = [...out.svg.matchAll(/<path\b[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('');
 	return { paths, box: out.box };

@@ -59,7 +59,7 @@ export async function brandSheet({ mark, name, font, palette: p, social }) {
 
 	// header
 	out += label(PAGE.margin, y + 16, 'BRAND SHEET');
-	out += text(PAGE.margin, y + 96, name, { size: 76, color: p.ink, font: face.family });
+	out += text(PAGE.margin, y + 96, name, { size: 76, color: p.ink, font: face.family, weight: face.weight });
 	const source = mark.live ? `${mark.name}, ${MARK_URL.replace('https://', '')}${mark.slug} (CC0)` : mark.name;
 	out += label(PAGE.margin, y + 140, `Mark: ${source}   ·   Type: ${face.name}   ·   Colour: ${p.primary}`);
 	y += 176;
@@ -110,18 +110,18 @@ export async function brandSheet({ mark, name, font, palette: p, social }) {
 	chips.forEach((c, i) => {
 		const x = PAGE.margin + i * (cw + PAGE.gutter);
 		out += panel(x, y, cw, ch, c.bg, { r: 14, stroke: c.bg === p.paper ? line : undefined });
-		out += text(x + 20, y + 44, c.title, { size: 26, color: c.fg, font: face.family });
+		out += text(x + 20, y + 44, c.title, { size: 26, color: c.fg, font: face.family, weight: face.weight });
 		c.lines.forEach((s, k) => (out += text(x + 20, y + 96 + k * 24, s, { size: 13, color: c.fg })));
 	});
 	y += ch + PAGE.section;
 
 	// type
 	heading('03', 'Type');
-	out += text(PAGE.margin, y + 170, 'Aa', { size: 200, color: p.ink, font: face.family });
+	out += text(PAGE.margin, y + 170, 'Aa', { size: 200, color: p.ink, font: face.family, weight: face.weight });
 	const tx = PAGE.margin + 330;
-	out += text(tx, y + 56, face.name, { size: 48, color: p.ink, font: face.family });
-	out += text(tx, y + 110, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', { size: 30, color: p.ink, font: face.family });
-	out += text(tx, y + 152, 'abcdefghijklmnopqrstuvwxyz 0123456789', { size: 30, color: p.ink, font: face.family });
+	out += text(tx, y + 56, face.name, { size: 48, color: p.ink, font: face.family, weight: face.weight });
+	out += text(tx, y + 110, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', { size: 30, color: p.ink, font: face.family, weight: face.weight });
+	out += text(tx, y + 152, 'abcdefghijklmnopqrstuvwxyz 0123456789', { size: 30, color: p.ink, font: face.family, weight: face.weight });
 	out += label(tx, y + 196, `${face.name} ${face.weight} · SIL Open Font License · fonts.google.com/specimen/${face.google.replace(/ /g, '+')}`);
 	y += 220 + PAGE.section;
 

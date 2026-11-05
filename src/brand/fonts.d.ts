@@ -2,7 +2,7 @@
 export interface Font {
 	/** Its name (`Inter`). */
 	name: string;
-	/** The face's own family, as an SVG names it (`Inter SemiBold`). */
+	/** The face's family, as an SVG names it with `weight` (`Inter SemiBold`, `IBM Plex Mono`). */
 	family: string;
 	/** The one weight bundled. */
 	weight: number;
@@ -33,10 +33,15 @@ export type FontId = keyof typeof FONTS;
 
 /** The name's typeface when none is asked for: `inter`. */
 export const DEFAULT_FONT: FontId;
-/** The labels' regular face: IBM Plex Mono. */
+/** The labels' family, IBM Plex Mono (regular and semibold, by weight). */
 export const LABEL_FONT: string;
-/** The labels' semibold face. */
-export const LABEL_FONT_BOLD: string;
+/** A file bundled whole, as published: where it comes from, and its sha256. */
+export interface Upstream {
+	url: string;
+	sha256: string;
+}
+/** The files bundled whole (the faces with a Reserved Font Name), by file. */
+export const UPSTREAM: Readonly<Record<string, Upstream>>;
 /** Every bundled font file. */
 export function fontFiles(): URL[];
 /** A typeface by id or name, any case; null when it isn't bundled. */

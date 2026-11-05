@@ -3,10 +3,10 @@ export interface TextStyle {
 	/** Pixels (13). */
 	size?: number;
 	color?: string;
-	/** 400 or 600 (400). */
+	/** The face's weight: 400 or 600 for the labels (400). */
 	weight?: number;
 	anchor?: 'start' | 'middle' | 'end';
-	/** A bundled face's family (IBM Plex Mono, semibold at 600). */
+	/** A bundled face's family, with its `weight` (IBM Plex Mono). */
 	font?: string;
 }
 

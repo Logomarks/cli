@@ -6,7 +6,6 @@
  */
 
 import { body, viewBox } from '../svg/shapes.js';
-import { LABEL_FONT_BOLD } from '../brand/fonts.js';
 import { COLORS, FONT } from './theme.js';
 
 /**
@@ -27,7 +26,7 @@ export const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace
  * @returns {string} The SVG.
  */
 export const text = (x, y, s, { size = 13, color = COLORS.text, weight = 400, anchor = 'start', font } = {}) =>
-	`<text x="${x}" y="${y}" font-family="${font ?? (weight >= 600 ? LABEL_FONT_BOLD : FONT)}" font-size="${size}" fill="${color}" text-anchor="${anchor}">${esc(s)}</text>`;
+	`<text x="${x}" y="${y}" font-family="${font ?? FONT}" font-weight="${weight}" font-size="${size}" fill="${color}" text-anchor="${anchor}">${esc(s)}</text>`;
 
 /**
  * A rounded rectangle.

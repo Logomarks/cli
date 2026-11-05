@@ -75,7 +75,7 @@ codex mcp add logomarks -- npx -y logomarks mcp         # Codex (~/.codex/config
 | `palette(hex)`, `lockup(o)`, `artwork(o)`, `FONTS`, `OBJECTS`, `RECIPES` | The parts they're built from. |
 | `createServer({ cwd })`, `TOOLS` from `logomarks/mcp` | The MCP server (not connected) and its tools. |
 
-The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque, Instrument Serif, and for restaurants Fraunces, Cagliostro, Limelight and Shrikhand, for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
+The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque, Instrument Serif, and for restaurants Fraunces, Cagliostro, Limelight and Shrikhand, for names) are SIL OFL, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them): latin subsets, except the faces with a Reserved Font Name (Cagliostro, Limelight, IBM Plex Mono), which are bundled whole as published.
 
 Free and open. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
 

@@ -1,9 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
+import path from 'node:path';
 import { palette, parseColor, contrast, loadMark, findMark, MarkNotFound, paint, lockup, FONTS } from '../src/index.js';
 import { toOklch, AA, GRAPHIC } from '../src/brand/color.js';
-import { fontId } from '../src/brand/fonts.js';
+import { fontId, fontFiles, UPSTREAM } from '../src/brand/fonts.js';
 import { ico } from '../src/brand/ico.js';
 import { typeset } from '../src/brand/type.js';
 import { markPng } from '../src/brand/mark.js';
@@ -58,6 +60,22 @@ test('fonts: every bundled face is OFL and resolves by id or name', () => {
 	assert.equal(fontId('Comic Sans'), null);
 });
 
+test('a face with a Reserved Font Name is bundled whole, byte for byte as pinned', () => {
+	const licence = fs.readFileSync(new URL('../data/fonts/OFL.txt', import.meta.url), 'utf8');
+	const reserved = [...licence.matchAll(/Reserved Font Name "?([^".\n]+)"?/g)].map((m) => m[1]);
+	assert.deepEqual(reserved, ['Cagliostro', 'Limelight', 'Plex']);
+	const files = fontFiles().map((u) => path.basename(u.pathname));
+	for (const name of reserved) {
+		const named = files.filter((f) => f.includes(name));
+		assert.ok(named.length, name);
+		for (const f of named) assert.ok(f in UPSTREAM, `${f} carries "${name}", so it must be bundled whole`);
+	}
+	for (const [file, pin] of Object.entries(UPSTREAM)) {
+		const bytes = fs.readFileSync(new URL(`../data/fonts/${file}`, import.meta.url));
+		assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), pin.sha256, file);
+	}
+});
+
 test('typeset sets outlines in the face asked for', async () => {
 	const inter = await typeset('Hexa', 'inter');
 	const serif = await typeset('Hexa', 'instrument-serif');
@@ -68,13 +86,13 @@ test('typeset sets outlines in the face asked for', async () => {
 });
 
 test('every bundled file is named in its face\'s family, so an SVG finds it', () => {
-	/** A font's family names (name id 1, Windows platform). */
+	/** A font's family names (name ids 1 and 16, Windows platform). */
 	const families = (/** @type {Buffer} */ buf) => {
 		const at = [...Array(buf.readUInt16BE(4)).keys()].map((i) => 12 + i * 16).find((e) => buf.toString('latin1', e, e + 4) === 'name');
 		const off = buf.readUInt32BE(/** @type {number} */ (at) + 8), strings = off + buf.readUInt16BE(off + 4);
 		return [...Array(buf.readUInt16BE(off + 2)).keys()]
 			.map((j) => off + 6 + j * 12)
-			.filter((r) => buf.readUInt16BE(r) === 3 && buf.readUInt16BE(r + 6) === 1)
+			.filter((r) => buf.readUInt16BE(r) === 3 && [1, 16].includes(buf.readUInt16BE(r + 6)))
 			.map((r) => buf.subarray(strings + buf.readUInt16BE(r + 10), strings + buf.readUInt16BE(r + 10) + buf.readUInt16BE(r + 8)).swap16().toString('utf16le'));
 	};
 	for (const f of Object.values(FONTS)) assert.ok(families(fs.readFileSync(new URL(`../data/fonts/${f.file}`, import.meta.url))).includes(f.family), f.family);
