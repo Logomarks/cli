@@ -67,7 +67,7 @@ codex mcp add logomarks -- npx -y logomarks mcp         # Codex (~/.codex/config
 | `fix(svg)` | The mark refitted, or `null` when there's nothing safe to fix. |
 | `similar(svg, { top, letters, exclude })` | `[{ slug, name, score, verdict }]`, closest first. |
 | `sheet([{ name, svg }])` | `{ png, svg, marks }`. |
-| `findMarks(query, { style, tags, industry, letter, limit })`, `facets()` | `{ total, marks }`, most words matched first; the filters' values. |
+| `findMarks(query, { style, tags, industry, letter, limit })`, `facets()` | `{ total, marks }`, searched as the board does (every word, synonyms too, best first); the filters' values. |
 | `fitMark(svg)`, `loadIndex()`, `FINDINGS`, `rules` | The fitter, the live set, every finding id, the house rules. |
 | `loadMark(ref)`, `paint(svg, color)`, `markPng(svg, { size, color })` | A mark by slug, name or file; as a file in a colour; as a PNG. |
 | `kit({ mark, name, color, font })` | `{ brand, files, sheet }`: every file in memory. |

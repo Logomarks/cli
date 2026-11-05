@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
  * Builds the bundled index of live marks (`data/index.bin`) from the
- * Logomarks data: every mark in `marks.json` with its SVG, what it is (tags
+ * Logomarks data: every mark in `marks.json`, in the board's order, with its SVG, what it is (tags
  * and collection; style, mood, letter and description from `descriptions.json`;
  * industries from `industries.json`), its outline coverage (the outline signature before its blur), and a letter signature for badges (their holes) and letter or
- * number marks (their ink).
+ * number marks (their ink). Also the board's search, packed (@arraypress/search): each mark with its search words
+ * (`keywords.json`) and industries' names, and the synonyms, read as the site reads them (@logomarks/marks/search),
+ * so `find` answers as the board does. Run in the monorepo (Node 22.18+ reads the site's .ts data as it is).
  *
  *   npm run index                      from ../marks/data (the monorepo)
- *   node scripts/index.js <data dir>   from any copy of the data
+ *   node scripts/index.js <data dir>   from another copy of the marks data
  */
 
 import fs from 'node:fs';
@@ -15,6 +17,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { outlineCoverage, letterSignatures } from '../src/similar/signature.js';
 import { writeIndex, INDEX_FILE } from '../src/similar/store.js';
+import { pack } from '@arraypress/search';
+import { inBoardOrder } from '../../marks/src/order.ts';
+import { searchOptions, searchRecords } from '../../marks/src/search.ts';
+import { industries as industryList } from '../../../src/data/industries.ts';
+import { searchSynonyms } from '../../../src/data/search-synonyms.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dir = process.argv[2] ?? path.join(here, '../../marks/data');
@@ -26,11 +33,13 @@ const isBadge = (/** @type {string} */ slug) => /(^|-)badge-/.test(slug);
 const read = (/** @type {string} */ file) => JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
 
 /** @type {{ slug: string, name: string, collection: string, tags: string[] }[]} */
-const list = read('marks.json');
+const list = inBoardOrder(read('marks.json'));
 /** @type {Record<string, { style: string, mood: string[], letter?: string, description: string }>} */
 const descriptions = read('descriptions.json');
 /** @type {Record<string, string[]>} */
 const industries = fs.existsSync(path.join(dir, 'industries.json')) ? read('industries.json') : {};
+/** @type {Record<string, string[]>} */
+const keywords = fs.existsSync(path.join(dir, 'keywords.json')) ? read('keywords.json') : {};
 const marks = [], coverages = [], letters = [];
 const started = Date.now();
 for (const m of list) {
@@ -49,5 +58,6 @@ for (const m of list) {
 		else if (lettery) letters.push({ mark: i, kind: /** @type {const} */ ('ink'), sig: ink });
 	}
 }
-const bytes = writeIndex({ marks, coverages, letters });
+const search = pack(searchRecords(marks.map((m) => ({ ...m, keywords: keywords[m.slug] })), industryList), searchOptions(searchSynonyms));
+const bytes = writeIndex({ marks, coverages, letters, search });
 console.log(`${marks.length} marks, ${letters.length} letters → ${path.relative(process.cwd(), fileURLToPath(INDEX_FILE))} (${(bytes / 1024).toFixed(0)} KB, ${((Date.now() - started) / 1000).toFixed(1)} s)`);

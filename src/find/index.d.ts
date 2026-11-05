@@ -48,7 +48,7 @@ export interface Facets {
 
 /** How many marks a search returns when no limit is given: 20. */
 export const DEFAULT_LIMIT: number;
-/** Searches the live set by words (most found first) and exact filters. */
+/** Searches the live set as the board does (every word found, synonyms too, best first) and by exact filters. */
 export function findMarks(query?: string, o?: FindOptions): FindResult;
 /** The values the filters take, with how many marks have each, most first. */
 export function facets(index?: MarkIndex): Facets;
