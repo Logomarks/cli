@@ -104,9 +104,9 @@ test('mockup and cover write PNGs; bad choices exit 2', async () => {
 test('find: words and filters, facets with nothing to search by, 1 when nothing matches', async () => {
 	const r = await run(['find', 'fox', '--top', '2', '--json']);
 	assert.equal(r.code, 0);
-	// as on the board: every Fox, in the board's order (Facet Fox first)
-	assert.deepEqual(JSON.parse(r.out).marks.map((/** @type {{ slug: string }} */ m) => m.slug), ['facet-fox', 'pixel-fox-glitch']);
-	assert.equal(JSON.parse(r.out).total, 9);
+	// as on the board: every Fox, in the board's order (Track Fox Tail first since Drop 17)
+	assert.deepEqual(JSON.parse(r.out).marks.map((/** @type {{ slug: string }} */ m) => m.slug), ['track-fox-tail', 'crease-fox-sit']);
+	assert.equal(JSON.parse(r.out).total, 12);
 	// a trade by another name: the synonyms find the lawyers' scales
 	assert.equal(JSON.parse((await run(['find', 'solicitor', '--top', '1', '--json'])).out).marks[0].slug, 'pixel-scales');
 	const k = JSON.parse((await run(['find', '--style', 'badge', '--letter', 'K', '--json'])).out);

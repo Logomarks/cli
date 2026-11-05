@@ -65,11 +65,11 @@ test('find_marks: words and filters; no arguments lists the facets', async () =>
 
 test('findMarks searches as the board does: synonyms, phrases, plurals, filler words left out', () => {
 	const r = findMarks('a logo for a fox', { limit: 1 });
-	assert.equal(r.marks[0].slug, 'facet-fox');
+	assert.equal(r.marks[0].slug, 'track-fox-tail');
 	assert.equal(r.total, findMarks('fox').total);
 	// UK and US trades, a two-word phrase and its plural
 	assert.deepEqual(findMarks('solicitor').marks.map((m) => m.slug), findMarks('attorney').marks.map((m) => m.slug));
-	assert.deepEqual(findMarks('estate agents', { limit: 3 }).marks.map((m) => m.slug), ['pixel-house', 'house-line', 'keyhole-house']);
+	assert.deepEqual(findMarks('estate agents', { limit: 3 }).marks.map((m) => m.slug), ['iso-duplex', 'iso-stair-door', 'iso-storeys']);
 	// every word must be found
 	assert.equal(findMarks('fox zzqx').total, 0);
 });
