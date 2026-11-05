@@ -8,30 +8,11 @@
 import fs from 'node:fs';
 import { check, fix } from '../../checks/index.js';
 import { svgFiles, slugOf } from '../files.js';
-import { style, pad } from '../style.js';
+import { style } from '../style.js';
+import { reportLines as lines } from '../report.js';
 
 /** What `check` takes. */
 export const spec = { flags: ['json', 'fix', 'strict'], options: { ignore: '' } };
-
-/** Severity labels for the readable output. */
-const LABEL = { error: style.red('error  '), warning: style.yellow('warning'), info: style.dim('note   ') };
-
-/**
- * A report as readable lines.
- *
- * @param {string} file The file.
- * @param {import('../../checks/index.js').Report} r Its report.
- * @param {boolean} fixed Whether it was refitted.
- * @returns {string} The lines.
- */
-function lines(file, r, fixed) {
-	const sym = !r.ok ? style.red('✗') : r.warnings ? style.yellow('!') : style.green('✓');
-	const counts = [r.errors && `${r.errors} error${r.errors > 1 ? 's' : ''}`, r.warnings && `${r.warnings} warning${r.warnings > 1 ? 's' : ''}`].filter(Boolean).join(', ');
-	const size = r.size ? `${r.size.w} × ${r.size.h}` : 'empty';
-	const head = `${sym} ${style.bold(file)}  ${style.dim(size)}${counts ? `  ${counts}` : ''}${fixed ? style.green('  refitted') : ''}`;
-	const body = r.findings.map((f) => `    ${LABEL[f.severity]}  ${pad(f.id, 12)} ${f.message}${f.box ? style.dim(`  [${f.box.join(', ')}]`) : f.point ? style.dim(`  (${f.point.join(', ')})`) : ''}`);
-	return [head, ...body].join('\n');
-}
 
 /**
  * Runs `check`.

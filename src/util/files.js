@@ -2,7 +2,8 @@
  * @module logomarks/util/files
  *
  * Files in and out: the SVGs a list of paths names (folders expanded), a
- * mark's name from its file, and writing a file with its folder made.
+ * mark's name from its file, and writing a file (or a map of them) with
+ * their folders made.
  */
 
 import fs from 'node:fs';
@@ -40,4 +41,20 @@ export const slugOf = (file) => path.basename(file).replace(/\.svg$/i, '');
 export function writeFile(file, data) {
 	fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
 	fs.writeFileSync(file, data);
+}
+
+/**
+ * Writes files by path under a folder.
+ *
+ * @param {string} dir The folder.
+ * @param {Iterable<[string, string | Uint8Array]>} files Each file's path in it and its data.
+ * @returns {number} How many.
+ */
+export function writeFiles(dir, files) {
+	let n = 0;
+	for (const [p, data] of files) {
+		writeFile(path.join(dir, p), data);
+		n++;
+	}
+	return n;
 }

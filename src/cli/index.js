@@ -10,6 +10,10 @@ import { parseArgs, UsageError } from './args.js';
 import { FONTS } from '../brand/fonts.js';
 import { OBJECTS } from '../mockup/index.js';
 import { RECIPES } from '../cover/index.js';
+import { PRESETS } from '../edit/glitch.js';
+import { OPS } from '../edit/ops.js';
+import { COMBINE_OPS } from '../edit/combine.js';
+import { STYLE_IDS } from '@arraypress/brand-kit';
 import { VERSION as version } from '../util/version.js';
 
 
@@ -30,7 +34,7 @@ function list(names) {
 }
 
 /** The help text. */
-export const HELP = `logomarks ${version}: check logomarks the way the Logomarks set is checked, and build a brand on one.
+export const HELP = `logomarks ${version}: check logomarks the way the Logomarks set is checked, edit them, and build a brand on one.
 
 Check
   logomarks check <file.svg | folder…>     fit, specks, holes, slivers, clipping, gaps, 32 px features
@@ -55,13 +59,26 @@ Find
       --style badge --tag round,symmetric --industry fintech --letter K --top 20
                                            no words or filters: every style, tag, mood and industry
 
+Edit (fitted to the grid and checked; -o file.svg or .png, else the SVG to stdout)
+  logomarks parts <mark> [-o parts.png]    the parts by index, box and area (what --ops names)
+  logomarks glitch <mark> --preset shear   a glitch edition: ${Object.keys(PRESETS).join(', ')}
+      --seed 1 --angle --place 0-1 --slide 44 --gap 22 --cuts
+  logomarks edit <mark> --ops '[{"op":"delete","parts":[0]}]'   (or --ops @ops.json)
+${list(Object.keys(OPS))}
+  logomarks combine <a> <b> --op subtract  ${COMBINE_OPS.join(', ')}
+      --scale 0.5 --rotate 45 --flip horizontal --x 0 --y 0   (b, over a)
+
 Build (a live mark by slug or name, or your own .svg)
   logomarks get <slug|name> [-o file]      a live mark's SVG (CC0) to stdout or a file
       --color #hex  --size 512  --format svg|png
   logomarks kit <mark> --name "Brand" -o dir/
-                                           a free starter kit: mark SVG and PNGs, favicons, lockups,
-                                           palette, social images, brand.json, brand-sheet.png
+                                           the brand kit: mark, favicons, lockups, palette, tokens,
+                                           brand sheet, brand.json and the social pack
       --color #hex  --font ${Object.keys(FONTS).join('|')}
+      --tagline --url --handle  --styles ${STYLE_IDS.join(',')}  --platforms  --animated  --no-social
+  logomarks social <mark> --name "Brand" -o dir/
+                                           every platform's images at its size, in each style
+      --platforms instagram,linkedin,x-header  --styles bold  --animated  (and kit's brand options)
   logomarks mockup <mark> --object card -o card.png
 ${list(Object.keys(OBJECTS))}
       --name --color --font --layout --surface oak|concrete|linen|paper --view front|angle
@@ -75,7 +92,8 @@ ${list(Object.keys(RECIPES))}
 Agents
   logomarks mcp                            the same as MCP tools on stdio (Claude Code, Codex, Cursor):
                                            find_marks, get_mark, check_mark, similar_marks, review_sheet,
-                                           brand_kit, mockup, cover
+                                           list_parts, glitch_mark, edit_mark, combine_marks,
+                                           brand_kit, social_pack, mockup, cover
 
 Exit codes: 0 pass, 1 fail, 2 usage.
 Rules: 512 canvas, longest side 448, centred; filled paths in currentColor; one gap (22); nothing under 10.

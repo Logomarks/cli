@@ -5,8 +5,11 @@
  * TrueType (resvg reads it) in `data/fonts/` (`scripts/fonts.js` writes
  * them). IBM Plex Mono sets the sheets' labels; the rest set a brand's name.
  * Each file is one face, named in its own family (`Inter SemiBold`), so an
- * SVG names the face by `family` and never needs a weight.
+ * SVG names the face by `family` and never needs a weight. `brandFont()`
+ * hands one to `@arraypress/brand-kit` as bytes.
  */
+
+import fs from 'node:fs';
 
 /** The typefaces a brand's name can be set in, by id. */
 export const FONTS = {
@@ -46,4 +49,19 @@ export function fontId(name) {
 	if (key in FONTS) return /** @type {import('./fonts.js').FontId} */ (key);
 	const hit = Object.entries(FONTS).find(([, f]) => f.name.toLowerCase().replace(/\s+/g, '-') === key);
 	return hit ? /** @type {import('./fonts.js').FontId} */ (hit[0]) : null;
+}
+
+/** @type {Map<string, Uint8Array>} */
+const bytes = new Map();
+
+/**
+ * A bundled face as `@arraypress/brand-kit` takes it: its name, its bytes (read once), its weight and tracking.
+ *
+ * @param {import('./fonts.js').FontId} [id] The face (inter).
+ * @returns {import('./fonts.js').BrandFont} The font.
+ */
+export function brandFont(id = DEFAULT_FONT) {
+	const f = FONTS[id];
+	if (!bytes.has(f.file)) bytes.set(f.file, new Uint8Array(fs.readFileSync(new URL(`../../data/fonts/${f.file}`, import.meta.url))));
+	return { name: f.name, data: /** @type {Uint8Array} */ (bytes.get(f.file)), weight: f.weight, tracking: f.tracking };
 }

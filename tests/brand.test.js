@@ -1,35 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { palette, parseColor, contrast, loadMark, findMark, MarkNotFound, paint, lockup, FONTS } from '../src/index.js';
-import { toOklch, AA, GRAPHIC } from '../src/brand/color.js';
+import { parseColor, loadMark, findMark, MarkNotFound, paint, markPng, FONTS, brandFont, brandInput } from '../src/index.js';
 import { fontId } from '../src/brand/fonts.js';
-import { ico } from '../src/brand/ico.js';
-import { typeset } from '../src/brand/type.js';
-import { markPng } from '../src/brand/mark.js';
 import { fixturePath, pngSize } from './helpers.js';
 
-test('colours parse, and contrast is WCAG’s', () => {
+test('colours parse', () => {
 	assert.equal(parseColor('#f50'), '#FF5500');
 	assert.equal(parseColor('2e4bff'), '#2E4BFF');
 	assert.equal(parseColor('white'), '#FFFFFF');
 	assert.equal(parseColor('red'), null);
-	assert.equal(contrast('#000000', '#FFFFFF'), 21);
-	assert.equal(contrast('#777777', '#777777'), 1);
-});
-
-test('a palette keeps its hue and its text colours clear AA', () => {
-	for (const hex of ['#FF5C3A', '#D4FF3A', '#2E4BFF', '#000000', '#FFFFFF', '#888888']) {
-		const p = palette(hex);
-		const L = Object.values(p.scale).map((c) => toOklch(c)[0]);
-		assert.ok(L.every((l, i) => i === 0 || l < L[i - 1]), `${hex}: the scale darkens step by step`);
-		assert.ok(contrast(p.primary, p.onPrimary) >= GRAPHIC, `${hex}: text on the brand colour`);
-		assert.ok(contrast(p.text.primaryOnLight, p.paper) >= AA, `${hex}: brand text on paper`);
-		assert.ok(contrast(p.text.primaryOnDark, p.ink) >= AA, `${hex}: brand text on ink`);
-		assert.ok(contrast(p.mark.onLight, p.paper) >= GRAPHIC && contrast(p.mark.onDark, p.ink) >= GRAPHIC, `${hex}: the mark on both grounds`);
-	}
-	const blue = toOklch(palette('#2E4BFF').scale['300'])[2];
-	assert.ok(Math.abs(blue - toOklch('#2E4BFF')[2]) < 8);
 });
 
 test('marks load by slug, by name or from a file, and a miss suggests', () => {
@@ -55,34 +35,25 @@ test('fonts: every bundled face is OFL and resolves by id or name', () => {
 	assert.equal(fontId('Comic Sans'), null);
 });
 
-test('typeset sets outlines in the face asked for', async () => {
-	const inter = await typeset('Hexa', 'inter');
-	const serif = await typeset('Hexa', 'instrument-serif');
-	assert.match(inter.paths, /<path d="M/);
-	assert.ok(inter.box.w > 150 && inter.box.w < 300);
-	assert.ok(inter.cap > 60 && inter.cap < 80);
-	assert.notEqual(inter.box.w.toFixed(1), serif.box.w.toFixed(1));
+test('a bundled face goes to brand-kit as its bytes, weight and tracking', () => {
+	const f = brandFont('instrument-serif');
+	assert.equal(f.name, 'Instrument Serif');
+	assert.equal(f.weight, 400);
+	assert.equal(f.tracking, -0.01);
+	assert.equal(new TextDecoder().decode(f.data.subarray(0, 4)), '\0\x01\0\0');
+	assert.equal(brandFont().name, 'Inter');
 });
 
-test('lockups: outlines, no fonts, laid out by layout', async () => {
-	const mark = loadMark('hex-gem').svg;
-	const h = await lockup({ mark, name: 'Hexa Labs', font: 'inter', markColor: '#FF5C3A', textColor: '#111111' });
-	const s = await lockup({ mark, name: 'Hexa Labs', font: 'inter', layout: 'stacked', markColor: '#FF5C3A' });
-	const m = await lockup({ mark, name: 'Hexa Labs', font: 'inter', layout: 'mark', markColor: '#FF5C3A' });
-	assert.doesNotMatch(h.svg, /<text/);
-	assert.match(h.svg, /fill="#111111"/);
-	assert.ok(h.width > 2.5 * h.height);
-	assert.ok(s.height > s.width * 0.6);
-	assert.equal(m.height, 300); // the mark's 200, and a quarter of it clear above and below
+test('a brand credits a live mark (CC0) and not a file', () => {
+	const live = brandInput({ mark: loadMark('hex-gem'), name: ' Hexa ', color: '#FF5C3A' });
+	assert.equal(live.name, 'Hexa');
+	assert.deepEqual(live.source, { name: 'Hex Gem', url: 'https://logomarks.ai/marks/hex-gem', license: 'CC0-1.0' });
+	const file = brandInput({ mark: loadMark(fixturePath('off-grid')) });
+	assert.equal(file.name, 'Off Grid');
+	assert.equal(file.source, undefined);
 });
 
-test('a .ico wraps its PNGs', async () => {
-	const mark = loadMark('hex-gem').svg;
-	const pngs = await Promise.all([16, 32].map(async (size) => ({ size, png: await markPng(mark, { size, color: '#000' }) })));
-	const file = Buffer.from(ico(pngs));
-	assert.deepEqual([file.readUInt16LE(0), file.readUInt16LE(2), file.readUInt16LE(4)], [0, 1, 2]);
-	assert.equal(file[6], 16);
-	assert.equal(file[22], 32);
-	const at = file.readUInt32LE(6 + 16 + 12);
-	assert.deepEqual(pngSize(file.subarray(at)), { width: 32, height: 32 });
+test('a mark drawn to a PNG on a ground', async () => {
+	const png = await markPng(loadMark('hex-gem').svg, { size: 48, color: '#000', ground: '#fff', pad: 0.1 });
+	assert.deepEqual(pngSize(png), { width: 48, height: 48 });
 });

@@ -21,7 +21,8 @@ export { TOOLS };
 export const INSTRUCTIONS = `Logomarks: 1,500+ free geometric logomarks (CC0), and the checks the set is held to, run locally.
 - Pick a mark: find_marks, then get_mark.
 - Draw your own: write the SVG to the house rules (512 canvas, longest side 448, centred; filled paths in currentColor; one gap of 22; nothing under 10 units), then check_mark, similar_marks and review_sheet. Fix every error, look at the sheet, and repeat until check_mark is ok.
-- Build on a mark: brand_kit (a folder of files), mockup, cover.
+- Make it your own: list_parts, then edit_mark (delete, move, round, offset, mirror, two-tone …), glitch_mark, combine_marks. Each result is fitted and checked.
+- Build on a mark: brand_kit (a folder of files), social_pack, mockup, cover.
 Relative paths resolve against the server's working folder. Free and open source; the full brand kit, photoreal mockups and custom logos are at https://logomarks.ai/pricing.`;
 
 /**

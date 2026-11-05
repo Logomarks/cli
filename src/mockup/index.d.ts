@@ -1,17 +1,6 @@
 import type { Mark } from '../brand/mark.js';
-import type { Palette } from '../brand/color.js';
+import type { Brand } from '@arraypress/brand-kit';
 import type { FontId } from '../brand/fonts.js';
-
-/** The brand as the objects' art is drawn from it. */
-export interface Brand {
-	/** The mark's SVG. */
-	mark: string;
-	name: string;
-	/** The name as a slug (the laptop's domain). */
-	slug: string;
-	font: FontId;
-	palette: Palette;
-}
 
 /** One object: its mockup function, its layouts (the first is the default), the option `base` sets, and its art. */
 export interface ObjectSpec {

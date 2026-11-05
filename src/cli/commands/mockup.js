@@ -7,7 +7,7 @@
 
 import { mockup, OBJECTS } from '../../mockup/index.js';
 import { UsageError } from '../args.js';
-import { markArg, colorArg, fontArg, intArg, writeFile } from '../options.js';
+import { markArg, colorArg, fontArg, intArg, asUsage, writeFile } from '../options.js';
 import { style } from '../style.js';
 
 /** What `mockup` takes. */
@@ -26,13 +26,7 @@ export async function run(args, io) {
 	if (!object || !(object in OBJECTS)) throw new UsageError(`--object is one of ${Object.keys(OBJECTS).join(', ')}`);
 	const out = file ?? `${object}.png`;
 	const options = { mark, object, name: name?.trim() || undefined, color: colorArg(args.options.color), font: fontArg(args.options.font), layout, surface, view, base, seed, size: intArg('size', args.options.size, 200, 4000) };
-	let m;
-	try {
-		m = await mockup(options);
-	} catch (e) {
-		if (e instanceof TypeError) throw new UsageError(e.message);
-		throw e;
-	}
+	const m = await asUsage(() => mockup(options));
 	writeFile(out, out.toLowerCase().endsWith('.svg') ? m.svg : m.png);
 	if (args.flags.has('json')) io.out(JSON.stringify({ ok: true, file: out, object, width: m.width, height: m.height }, null, 2));
 	else io.out(`${style.green('✓')} wrote ${style.bold(out)}: ${options.name ?? mark.name} on a ${object}, ${m.width} × ${m.height}.`);

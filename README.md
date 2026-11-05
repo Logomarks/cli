@@ -1,84 +1,44 @@
 # logomarks
 
-Check a logomark the way the [Logomarks](https://logomarks.ai) set is checked: the fit to the 512 grid, stray specks, pin-holes and slivers, clipping, even gaps and features that survive 32 px; the nearest of the live marks; and a review sheet to look at. Then build a brand on one: the mark's files, a starter kit, mockups and covers. Built for AI coding agents (Claude Code, Codex, Cursor) and the people working with them, as a CLI and an MCP server. Pure JS: resvg in WebAssembly, no native binaries, works offline.
+Check a logomark the way the [Logomarks](https://logomarks.ai) set is checked (fit to the 512 grid, specks, pin-holes, slivers, clipping, even gaps, 32 px features, the nearest live marks, review sheets), edit it (glitch editions, edits by part, two marks combined), then build a brand on it: the mark's files, a brand kit, a social pack for every platform, mockups and covers. For AI coding agents (Claude Code, Codex, Cursor) and the people working with them, as a CLI and an MCP server. Pure JS: resvg in WebAssembly, no native binaries, works offline.
+
+## Quick start
 
 ```bash
-npx logomarks check mark.svg              # findings with ids, severities and boxes; exit 1 on errors
-npx logomarks check marks/ --fix          # refit to the grid in place (the only automatic fix)
-npx logomarks similar mark.svg            # the nearest live marks, with scores
-npx logomarks specks marks/               # every speck, sliver and pin-hole, with its box
-npx logomarks sheet marks/*.svg -o sheet.png
-```
+npx logomarks check mark.svg                     # findings with ids and boxes; exit 1 on errors
+npx logomarks similar mark.svg                   # the nearest live marks, with scores
+npx logomarks find calm hexagon                  # search the live set (CC0)
 
-```bash
-npx logomarks find calm hexagon                               # search the live set; --style --tag --industry --letter
-npx logomarks get hex-gem --color '#ff5c3a' > mark.svg        # a live mark (CC0); --size 512 -o mark.png
-npx logomarks kit hex-gem --name "Hexa Labs" --color '#ff5c3a' --font space-grotesk -o hexa/
+npx logomarks glitch quad-cove --preset shear --seed 3 -o glitched.svg
+npx logomarks parts quad-cove                    # the parts by index, for edit --ops
+npx logomarks edit quad-cove --ops '[{"op":"delete","parts":[3]},{"op":"round","radius":18}]' -o edited.svg
+npx logomarks combine quad-cove shear-a --op subtract --scale 0.5 -o combined.svg
+
+npx logomarks kit hex-gem --name "Hexa Labs" --color '#ff5c3a' --font space-grotesk --tagline "Things in hexes" -o hexa/
+npx logomarks social hex-gem --name "Hexa Labs" --platforms instagram,linkedin --styles bold
 npx logomarks mockup hex-gem --name "Hexa Labs" --object card -o card.png
 npx logomarks cover hex-gem --recipe aurora --title "Introducing Hexa" -o cover.png
 ```
 
-A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Every verb takes `--json`. Exit codes: 0 pass, 1 fail, 2 usage.
-
-```
-✗ speck.svg  448 × 448  1 error
-    error    speck        A stray piece of 36.0 sq units.  [253, 250, 259, 256]
-! gap-10.svg  448 × 448  1 warning
-    warning  uneven-gaps  A gap 9.8 wide, against the mark's main gap of 21.8: keep one gap width (22), or a clear 1:2 ratio.  [250.6, 24.1, 261.4, 487.9]
-```
-
-## Checks
-
-| Id | Severity | |
-|---|---|---|
-| `viewbox`, `size`, `centre`, `clipped` | error | `viewBox="0 0 512 512"`, longest side 448 (±0.5), centred, nothing outside the canvas. `--fix` refits. |
-| `markup`, `empty` | error | Filled paths only: no groups, transforms, strokes, styles, masks, text or images. |
-| `speck`, `sliver`, `pinhole` | error | Pieces under 60 sq units, holes under 30, left by booleans. Touch points, hairlines and repeated dots are left out. |
-| `fill`, `precision` | warning | `currentColor`; one decimal place. `--fix` refits. |
-| `thin`, `narrow-gap` | warning | Strokes or gaps under 10 units: they vanish or close up at 32 px. |
-| `uneven-gaps` | warning | One gap width per mark (22), or a clear 1:2 ratio. |
-
-`--strict` fails warnings too; `--ignore speck,uneven-gaps` leaves ids out. `similar` flags 0.72 and up as too close (look at the two side by side) and fails at 0.9 (a near-copy); `--letters` compares a badge's knocked-out letter instead (0.7 / 0.85); `--against <dir>` compares with a folder of SVGs instead of the live set, `--each` with the other candidates too, and `similar --all <data dir> --out similar.json` writes "More like this" for a whole set. `specks` is the set's speck review (`--piece 60 --hole 30 --allow slugs --all --raster`); `sheet --plain` draws a plain labelled grid. The measures come from [`@logomarks/core`](https://github.com/Logomarks/core).
-
-## Build
-
-| Verb | |
-|---|---|
-| `get` | The mark as SVG (stdout or `-o`), or a PNG with `--size`. `--color` paints it; `currentColor` otherwise. |
-| `kit` | `mark/` (SVG; PNG at 16, 32, 48, 180, 192, 512, 1024; on light and dark), `favicon/` (`.ico`, `favicon.svg`, `apple-touch-icon.png`, app icons, manifest), `lockup/` (horizontal and stacked, on light, dark and colour, SVG with the name as outlines, and PNG), `colors/palette.css`, `social/` (avatar 400², X header 1500×500, OG 1200×630), `brand.json` and `brand-sheet.png`. The palette is a 50–950 scale in the colour's hue, with text colours that clear AA. `--font`: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono`. |
-| `mockup` | The brand on a 2D object from [`@logomarks/mockups`](https://github.com/Logomarks/mockups): `card`, `letterhead`, `ticket`, `lanyard`, `sticker`, `tote`, `tee`, `hoodie`, `cap`, `mug`, `bag`, `box`, `poster`, `vinyl`, `cd`, `cassette`, `phone`, `laptop`, `billboard`, `shopfront`. Garments, mugs and bags carry the mark; full-bleed prints carry the lockup on the brand colour. `--layout`, `--surface`, `--view`, `--base` (the object's colour), `--size`. |
-| `cover` | A cover from [`@arraypress/covers`](https://github.com/arraypress/covers): `mark`, `gradient`, `tile`, `stripes`, `aurora`, `grid`, `cutout`. `--title`, `--label`, `--aspect og\|1:1\|16:9`, `--width`. |
-
-`-o file.svg` writes a mockup's or cover's SVG instead of the PNG.
+A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Every edit comes back fitted (448 on 512, centred) and checked, and the same seed gives the same bytes. Every verb takes `--json`. Exit codes: 0 pass, 1 fail, 2 usage.
 
 ## MCP
 
-`logomarks mcp` runs the same functions as MCP tools on stdio, locally: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet` (the sheet as an image), `brand_kit` (writes the folder, returns its path and the brand sheet), `mockup` and `cover` (a preview image; `out` writes the full size). Relative paths resolve against the server's working folder.
-
 ```bash
-claude mcp add logomarks -- npx -y logomarks mcp        # Claude Code (or install the logomarks plugin: skills too)
-codex mcp add logomarks -- npx -y logomarks mcp         # Codex (~/.codex/config.toml → [mcp_servers.logomarks])
+claude mcp add logomarks -- npx -y logomarks mcp        # Claude Code (or the logomarks plugin: skills too)
+codex mcp add logomarks -- npx -y logomarks mcp         # Codex
 ```
 
-## API
+Tools: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet`, `list_parts`, `glitch_mark`, `edit_mark`, `combine_marks`, `brand_kit`, `social_pack`, `mockup`, `cover`.
 
-| Export | |
-|---|---|
-| `check(svg, { name, ignore, strict })` | `{ ok, errors, warnings, notes, size, findings }`. |
-| `fix(svg)` | The mark refitted, or `null` when there's nothing safe to fix. |
-| `similar(svg, { top, letters, exclude })` | `[{ slug, name, score, verdict }]`, closest first. |
-| `sheet([{ name, svg }])` | `{ png, svg, marks }`. |
-| `findMarks(query, { style, tags, industry, letter, limit })`, `facets()` | `{ total, marks }`, searched as the board does (every word, synonyms too, best first); the filters' values. |
-| `fitMark(svg)`, `loadIndex()`, `FINDINGS`, `rules` | The fitter, the live set, every finding id, the house rules. |
-| `loadMark(ref)`, `paint(svg, color)`, `markPng(svg, { size, color })` | A mark by slug, name or file; as a file in a colour; as a PNG. |
-| `kit({ mark, name, color, font })` | `{ brand, files, sheet }`: every file in memory. |
-| `mockup({ mark, object, … })`, `cover({ mark, recipe, … })` | `{ png, svg, width, height }`. |
-| `palette(hex)`, `lockup(o)`, `artwork(o)`, `FONTS`, `OBJECTS`, `RECIPES` | The parts they're built from. |
-| `createServer({ cwd })`, `TOOLS` from `logomarks/mcp` | The MCP server (not connected) and its tools. |
+## Docs
 
-The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque and Instrument Serif for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
+- [Commands](docs/commands.md): every verb and option, and the checks.
+- [Editing](docs/editing.md): glitch presets, the edit ops, combining.
+- [MCP tools](docs/mcp.md): each tool's arguments and what it returns.
+- [API](docs/api.md): the library behind them.
 
-Free and open. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
+Built on [`@arraypress/marks-kit`](https://github.com/Logomarks/core) (the measures), [`@arraypress/vector-editor`](https://github.com/Logomarks/editor) (the edits), [`@arraypress/brand-kit`](https://github.com/Logomarks/brand-kit) (the kit and social pack), [`@logomarks/mockups`](https://github.com/Logomarks/mockups) and [`@arraypress/covers`](https://github.com/arraypress/covers). The marks are CC0; the bundled typefaces are SIL OFL. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
 
 ## Licence
 

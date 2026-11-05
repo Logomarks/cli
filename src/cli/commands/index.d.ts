@@ -9,4 +9,4 @@ export interface Command {
 }
 
 /** Every verb the CLI runs. */
-export const COMMANDS: Readonly<Record<'check' | 'similar' | 'specks' | 'sheet' | 'find' | 'get' | 'kit' | 'mockup' | 'cover' | 'mcp', Command>>;
+export const COMMANDS: Readonly<Record<'check' | 'similar' | 'specks' | 'sheet' | 'find' | 'parts' | 'glitch' | 'edit' | 'combine' | 'get' | 'kit' | 'social' | 'mockup' | 'cover' | 'mcp', Command>>;

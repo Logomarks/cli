@@ -18,21 +18,13 @@ export interface Rendered {
 	png?: Uint8Array;
 }
 
-/** An SVG with its text as outlines. */
-export interface Outlined {
-	/** resvg's tree written back out: paths only, no fonts needed. */
-	svg: string;
-	/** The box round what it draws; null when it draws nothing. */
-	box: { x: number; y: number; w: number; h: number } | null;
-}
-
 /** Loads the WebAssembly renderer (once); every render awaits it. */
 export function initRenderer(): Promise<void>;
 /** Loads the renderer and reads the typefaces up front (for long-lived processes). */
 export function warmRenderer(): Promise<void>;
 /** Renders an SVG with resvg (WebAssembly). */
 export function render(svg: string, o?: RenderOptions): Promise<Rendered>;
-/** Sets an SVG's text (in the bundled typefaces) as outlines, and measures it. */
-export function outline(svg: string): Promise<Outlined>;
+/** An SVG drawn to a PNG at a width: the rasteriser handed to `@arraypress/brand-kit`. */
+export function rasterize(svg: string, size: { width: number; height?: number }): Promise<Uint8Array>;
 /** A mark's coverage (alpha, 0–1) at `size` pixels wide, `currentColor` filled black. */
 export function coverage(svg: string, size: number): Promise<Float32Array>;
