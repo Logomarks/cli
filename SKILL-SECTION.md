@@ -33,7 +33,7 @@ npx logomarks cover hex-gem --recipe aurora --title "Launch" --color '#hex' -o c
   `<head>` lines are in `brand.json` → `head`), lockups, `colors/palette.css`, social images and `brand.json`. Open
   `brand-sheet.png` and look at it before handing the kit over: a light brand colour gets a darker mark on light grounds
   (it must clear 3:1), and its text colours clear AA.
-- Fonts: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono` (all OFL).
+- Fonts: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono` (all OFL); for restaurants, `fraunces` (warm serif: bistro, wine bar), `cagliostro` (flared sans, set wide: fine dining), `limelight` (art deco: cocktail bar), `shrikhand` (retro chunky: diner, brunch, ice cream).
 - `mockup --object`: card, letterhead, ticket, lanyard, sticker, tote, tee, hoodie, cap, mug, bag, box, poster, vinyl,
   cd, cassette, phone, laptop, billboard, shopfront. `--base black` changes a garment's or mug's colour.
 - `cover --recipe`: mark, gradient, tile, stripes, aurora, grid, cutout. `--aspect og` (default), `1:1`, `16:9`.

@@ -21,6 +21,10 @@ export const FONTS: {
 	readonly 'instrument-sans': Font;
 	readonly 'bricolage-grotesque': Font;
 	readonly 'instrument-serif': Font;
+	readonly fraunces: Font;
+	readonly cagliostro: Font;
+	readonly limelight: Font;
+	readonly shrikhand: Font;
 	readonly 'plex-mono': Font;
 };
 

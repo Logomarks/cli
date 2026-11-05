@@ -8,7 +8,8 @@
  *   node scripts/fonts.js <a node_modules folder holding @fontsource/*>
  *
  * The packages: ibm-plex-mono, inter, space-grotesk, instrument-sans,
- * bricolage-grotesque and instrument-serif (`npm pack` them; nothing runs).
+ * bricolage-grotesque, instrument-serif, fraunces, cagliostro, limelight and
+ * shrikhand (`npm pack` them; nothing runs).
  */
 
 import fs from 'node:fs';

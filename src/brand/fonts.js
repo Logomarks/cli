@@ -4,6 +4,9 @@
  * The bundled typefaces, all SIL Open Font License, latin only, as plain
  * TrueType (resvg reads it) in `data/fonts/` (`scripts/fonts.js` writes
  * them). IBM Plex Mono sets the sheets' labels; the rest set a brand's name.
+ * Four are for restaurants: Fraunces (a warm serif: bistros, wine bars),
+ * Cagliostro (a flared sans, set wide), Limelight (art deco) and Shrikhand
+ * (retro chunky: diners, brunch, ice cream).
  * Each file is one face, named in its own family (`Inter SemiBold`), so an
  * SVG names the face by `family` and never needs a weight.
  */
@@ -15,6 +18,10 @@ export const FONTS = {
 	'instrument-sans': { name: 'Instrument Sans', family: 'Instrument Sans SemiBold', weight: 600, file: 'InstrumentSans-SemiBold.ttf', tracking: -0.015, google: 'Instrument Sans' },
 	'bricolage-grotesque': { name: 'Bricolage Grotesque', family: 'Bricolage Grotesque SemiBold', weight: 600, file: 'BricolageGrotesque-SemiBold.ttf', tracking: -0.02, google: 'Bricolage Grotesque' },
 	'instrument-serif': { name: 'Instrument Serif', family: 'Instrument Serif', weight: 400, file: 'InstrumentSerif-Regular.ttf', tracking: -0.01, google: 'Instrument Serif' },
+	fraunces: { name: 'Fraunces', family: 'Fraunces SemiBold', weight: 600, file: 'Fraunces-SemiBold.ttf', tracking: -0.02, google: 'Fraunces' },
+	cagliostro: { name: 'Cagliostro', family: 'Cagliostro', weight: 400, file: 'Cagliostro-Regular.ttf', tracking: 0.3, google: 'Cagliostro' },
+	limelight: { name: 'Limelight', family: 'Limelight', weight: 400, file: 'Limelight-Regular.ttf', tracking: 0.06, google: 'Limelight' },
+	shrikhand: { name: 'Shrikhand', family: 'Shrikhand', weight: 400, file: 'Shrikhand-Regular.ttf', tracking: 0, google: 'Shrikhand' },
 	'plex-mono': { name: 'IBM Plex Mono', family: 'IBM Plex Mono SemiBold', weight: 600, file: 'IBMPlexMono-SemiBold.ttf', tracking: -0.02, google: 'IBM Plex Mono' },
 };
 

@@ -44,7 +44,7 @@ A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Ev
 | Verb | |
 |---|---|
 | `get` | The mark as SVG (stdout or `-o`), or a PNG with `--size`. `--color` paints it; `currentColor` otherwise. |
-| `kit` | `mark/` (SVG; PNG at 16, 32, 48, 180, 192, 512, 1024; on light and dark), `favicon/` (`.ico`, `favicon.svg`, `apple-touch-icon.png`, app icons, manifest), `lockup/` (horizontal and stacked, on light, dark and colour, SVG with the name as outlines, and PNG), `colors/palette.css`, `social/` (avatar 400², X header 1500×500, OG 1200×630), `brand.json` and `brand-sheet.png`. The palette is a 50–950 scale in the colour's hue, with text colours that clear AA. `--font`: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono`. |
+| `kit` | `mark/` (SVG; PNG at 16, 32, 48, 180, 192, 512, 1024; on light and dark), `favicon/` (`.ico`, `favicon.svg`, `apple-touch-icon.png`, app icons, manifest), `lockup/` (horizontal and stacked, on light, dark and colour, SVG with the name as outlines, and PNG), `colors/palette.css`, `social/` (avatar 400², X header 1500×500, OG 1200×630), `brand.json` and `brand-sheet.png`. The palette is a 50–950 scale in the colour's hue, with text colours that clear AA. `--font`: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `fraunces`, `cagliostro`, `limelight`, `shrikhand`, `plex-mono`. |
 | `mockup` | The brand on a 2D object from [`@logomarks/mockups`](https://github.com/Logomarks/mockups): `card`, `letterhead`, `ticket`, `lanyard`, `sticker`, `tote`, `tee`, `hoodie`, `cap`, `mug`, `bag`, `box`, `poster`, `vinyl`, `cd`, `cassette`, `phone`, `laptop`, `billboard`, `shopfront`. Garments, mugs and bags carry the mark; full-bleed prints carry the lockup on the brand colour. `--layout`, `--surface`, `--view`, `--base` (the object's colour), `--size`. |
 | `cover` | A cover from [`@arraypress/covers`](https://github.com/arraypress/covers): `mark`, `gradient`, `tile`, `stripes`, `aurora`, `grid`, `cutout`. `--title`, `--label`, `--aspect og\|1:1\|16:9`, `--width`. |
 
@@ -75,7 +75,7 @@ codex mcp add logomarks -- npx -y logomarks mcp         # Codex (~/.codex/config
 | `palette(hex)`, `lockup(o)`, `artwork(o)`, `FONTS`, `OBJECTS`, `RECIPES` | The parts they're built from. |
 | `createServer({ cwd })`, `TOOLS` from `logomarks/mcp` | The MCP server (not connected) and its tools. |
 
-The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque and Instrument Serif for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
+The live set is bundled (`data/index.bin`: each mark's SVG, tags, style, mood, description and industries, and its signatures; rebuilt with `npm run index`). The marks are CC0. The typefaces (IBM Plex Mono for labels; Inter, Space Grotesk, Instrument Sans, Bricolage Grotesque, Instrument Serif, and for restaurants Fraunces, Cagliostro, Limelight and Shrikhand, for names) are SIL OFL, latin, in `data/fonts/` (`OFL.txt`; `scripts/fonts.js` writes them).
 
 Free and open. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
 

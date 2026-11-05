@@ -45,9 +45,12 @@ test('marks load by slug, by name or from a file, and a miss suggests', () => {
 
 test('fonts: every bundled face is OFL and resolves by id or name', () => {
 	const licence = fs.readFileSync(new URL('../data/fonts/OFL.txt', import.meta.url), 'utf8');
+	/** The faces whose copyright isn't held by "The <name> Project Authors". */
+	const holders = { 'IBM Plex Mono': 'IBM Corp', Cagliostro: 'Matthew Desmond', Limelight: 'Sorkin Type Co', Shrikhand: 'Jonny Pinhorn' };
 	for (const [id, f] of Object.entries(FONTS)) {
 		assert.ok(fs.existsSync(new URL(`../data/fonts/${f.file}`, import.meta.url)), f.file);
-		assert.ok(licence.includes(f.name === 'IBM Plex Mono' ? 'IBM Corp' : `The ${f.name} Project Authors`), `${f.name}'s copyright in OFL.txt`);
+		const holder = holders[/** @type {keyof typeof holders} */ (f.name)] ?? `The ${f.name} Project Authors`;
+		assert.ok(licence.includes(holder), `${f.name}'s copyright in OFL.txt`);
 		assert.equal(fontId(id), id);
 		assert.equal(fontId(f.name), id);
 	}
@@ -62,6 +65,19 @@ test('typeset sets outlines in the face asked for', async () => {
 	assert.ok(inter.box.w > 150 && inter.box.w < 300);
 	assert.ok(inter.cap > 60 && inter.cap < 80);
 	assert.notEqual(inter.box.w.toFixed(1), serif.box.w.toFixed(1));
+});
+
+test('every bundled file is named in its face\'s family, so an SVG finds it', () => {
+	/** A font's family names (name id 1, Windows platform). */
+	const families = (/** @type {Buffer} */ buf) => {
+		const at = [...Array(buf.readUInt16BE(4)).keys()].map((i) => 12 + i * 16).find((e) => buf.toString('latin1', e, e + 4) === 'name');
+		const off = buf.readUInt32BE(/** @type {number} */ (at) + 8), strings = off + buf.readUInt16BE(off + 4);
+		return [...Array(buf.readUInt16BE(off + 2)).keys()]
+			.map((j) => off + 6 + j * 12)
+			.filter((r) => buf.readUInt16BE(r) === 3 && buf.readUInt16BE(r + 6) === 1)
+			.map((r) => buf.subarray(strings + buf.readUInt16BE(r + 10), strings + buf.readUInt16BE(r + 10) + buf.readUInt16BE(r + 8)).swap16().toString('utf16le'));
+	};
+	for (const f of Object.values(FONTS)) assert.ok(families(fs.readFileSync(new URL(`../data/fonts/${f.file}`, import.meta.url))).includes(f.family), f.family);
 });
 
 test('lockups: outlines, no fonts, laid out by layout', async () => {
