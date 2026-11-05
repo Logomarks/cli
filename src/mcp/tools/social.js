@@ -1,7 +1,7 @@
 /**
  * @module logomarks/mcp/tools/social
  *
- * `social_pack`: every platform image in each style (`@logomarks/brand-kit`),
+ * `build_social_pack`: every platform image in each style (`@logomarks/brand-kit`),
  * written to a folder, with one image per style to look at.
  */
 
@@ -34,11 +34,11 @@ async function samples(files) {
 
 /** @type {import('../index.js').Tool<import('./kit.js').BrandToolInput>} */
 export const tool = {
-	name: 'social_pack',
-	title: 'Social pack',
+	name: 'build_social_pack',
+	title: 'Build a social pack',
 	description: [
-		'Draw the brand for every social platform at its current size, the logo kept inside each safe zone, and write it to a folder:',
-		'Instagram (post, portrait, story, highlight), LinkedIn, X, YouTube (avatar, banner, thumbnail), Facebook, TikTok, Twitch, Discord, Threads and Bluesky,',
+		'Draw the brand for every social platform at its current size, the logo kept inside each safe zone, and write it to a folder; use it for profile images, banners and posts.',
+		'It covers Instagram (post, portrait, story, highlight), LinkedIn, X, YouTube (avatar, banner, thumbnail), Facebook, TikTok, Twitch, Discord, Threads and Bluesky,',
 		'each in minimal, bold and pattern styles as <style>/<id>.png and .svg (animated SVGs too with animated), plus an email signature, the Open Graph card and a README of sizes and sources.',
 		`Returns the folder’s absolute path and its files, and the first image of each style (a preview up to ${PREVIEW} px).`,
 	].join(' '),

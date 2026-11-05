@@ -24,7 +24,27 @@ import { svgFiles } from '../files.js';
 import { style, pad } from '../style.js';
 
 /** What `similar` takes. */
-export const spec = { flags: ['json', 'letters', 'each'], options: { top: '', against: '', all: '', out: '' } };
+export const spec = { flags: ['json', 'letters', 'each'], options: { top: '', against: '', all: '', out: 'o' } };
+
+/** `logomarks similar --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Find the live marks nearest to yours, with scores.',
+	usage: ['<file.svg | folder>… [options]', '--all <data dir> [-o similar.json]'],
+	about: [
+		`Compares outlines, rotations and mirrors included. ${SIMILAR.tooClose} and up is too close (compare`,
+		`the two by eye); ${SIMILAR.nearCopy} and up is a near-copy. Exit 1 when any mark is a near-copy.`,
+	],
+	options: [
+		['--top <n>', 'How many matches per mark. Default 5.'],
+		['--letters', `Compare a badge's knocked-out letter instead of its outline\n(${LETTERS.tooClose} too close, ${LETTERS.nearCopy} a near-copy).`],
+		['--against <dir>', 'Compare with a folder of SVGs instead of the bundled live set.'],
+		['--each', 'Compare the candidates with each other too (marked *).'],
+		['--all <data dir>', 'Write every mark\'s 8 nearest for a whole set ("More like this"),\nfrom its marks.json, descriptions.json and svg/.'],
+		['-o, --out <file>', 'Where --all writes. Default: stdout.'],
+	],
+	examples: ['logomarks similar mark.svg', 'logomarks similar out/ --top 3 --each', 'logomarks similar badge.svg --letters --json'],
+};
 
 /** Verdict labels for the readable output. */
 const LABEL = { 'near-copy': style.red('near-copy'), 'too-close': style.yellow('too close'), ok: style.dim('ok       ') };

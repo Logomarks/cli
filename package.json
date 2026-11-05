@@ -1,7 +1,38 @@
 {
   "name": "logomarks",
   "version": "0.2.0",
-  "description": "Check logomarks the way the Logomarks set is checked (fit, specks, pin-holes, slivers, clipping, gaps, 32 px features, the nearest of 2,000+ live marks, review sheets), edit them (glitch editions, edits by part, combining two), then build a brand on one: the mark's files, a brand kit (favicons, lockups, palette, tokens, brand sheet), a social pack for every platform, mockups and covers. Also an MCP server for Claude Code, Codex and Cursor. Pure JS, resvg in WebAssembly.",
+  "description": "Find, check, edit and build on free geometric logomarks from the command line or an AI agent: search the CC0 Logomarks set, check marks against its house rules, edit and glitch them, and build a brand kit, social pack, mockups and covers. Includes an MCP server.",
+  "keywords": [
+    "logo",
+    "logomark",
+    "logomarks",
+    "brand",
+    "brand-kit",
+    "svg",
+    "favicon",
+    "icon",
+    "mockup",
+    "og-image",
+    "social-media",
+    "design",
+    "cli",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "claude-code",
+    "codex",
+    "cursor",
+    "cc0"
+  ],
+  "homepage": "https://logomarks.ai",
+  "bugs": {
+    "url": "https://github.com/Logomarks/skills/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "David Sherlock",
+    "url": "https://davidsherlock.com"
+  },
   "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -30,43 +61,13 @@
     "CHANGELOG.md",
     "LICENSE"
   ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "test": "node --test tests/*.test.js",
     "typecheck": "tsc --noEmit",
     "index": "node scripts/index.js"
-  },
-  "keywords": [
-    "logo",
-    "logomark",
-    "logomarks",
-    "brand",
-    "svg",
-    "lint",
-    "check",
-    "favicon",
-    "duplicate",
-    "design-review",
-    "ai",
-    "claude-code",
-    "cli",
-    "brand-kit",
-    "favicon-generator",
-    "mockup",
-    "cover",
-    "og-image",
-    "palette",
-    "social-media",
-    "glitch",
-    "mcp",
-    "mcp-server",
-    "model-context-protocol",
-    "codex"
-  ],
-  "author": "David Sherlock",
-  "license": "MIT",
-  "homepage": "https://logomarks.ai",
-  "engines": {
-    "node": ">=20.0.0"
   },
   "publishConfig": {
     "access": "public",

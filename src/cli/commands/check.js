@@ -14,6 +14,24 @@ import { reportLines as lines } from '../report.js';
 /** What `check` takes. */
 export const spec = { flags: ['json', 'fix', 'strict'], options: { ignore: '' } };
 
+/** `logomarks check --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Check SVG marks against the house rules.',
+	usage: ['<file.svg | folder>… [options]'],
+	about: [
+		'Measures the fit (512 canvas, longest side 448, centred), the markup, specks, slivers,',
+		'pin-holes, clipping, gap widths and features too small for 32 px. Each finding has an id,',
+		'a severity and a box. Exit 0 when every mark passes, 1 when any fails.',
+	],
+	options: [
+		['--fix', 'Refit to the grid in place (the only automatic fix).'],
+		['--strict', 'Count warnings as failures too.'],
+		['--ignore <ids>', 'Leave these finding ids out, e.g. speck,uneven-gaps.'],
+	],
+	examples: ['logomarks check mark.svg', 'logomarks check marks/ --fix', 'logomarks check out/*.svg --strict --json'],
+};
+
 /**
  * Runs `check`.
  *

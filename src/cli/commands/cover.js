@@ -13,6 +13,25 @@ import { style } from '../style.js';
 /** What `cover` takes. */
 export const spec = { flags: ['json'], options: { out: 'o', recipe: '', title: '', label: '', color: '', aspect: '', width: '', seed: '' } };
 
+/** `logomarks cover --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Draw a cover (an OG image, a header or a post) with the mark on it.',
+	usage: ['<mark> [--recipe mark] [--title "…"] [-o cover.png] [options]'],
+	about: [`Recipes: ${Object.keys(RECIPES).join(', ')}.`],
+	options: [
+		['--recipe <id>', 'The look. Default mark.'],
+		['--title <text>', 'A headline; the mark moves out of its way.'],
+		['--label <text>', 'A small line over the title.'],
+		['--color <hex>', 'The brand colour, e.g. #ff5c3a. Default #d4ff3a.'],
+		['--aspect <ratio>', 'og (1200×630), 1:1, 16:9, 4:5, 9:16, any w:h, or a number.\nDefault og.'],
+		['--width <px>', 'The width, 200–6000. Default 1200.'],
+		['--seed <text>', "Drives every random choice. Default: the mark's slug."],
+		['-o, --out <file>', 'Write .png, or .svg (text as outlines). Default cover.png.'],
+	],
+	examples: ['logomarks cover hex-gem --recipe aurora --title "Introducing Hexa" -o cover.png', 'logomarks cover mark.svg --recipe stripes --aspect 1:1 -o post.png'],
+};
+
 /**
  * Runs `cover`.
  *

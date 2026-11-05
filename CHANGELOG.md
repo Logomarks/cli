@@ -5,29 +5,20 @@ All notable changes to `logomarks` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] — 2026-11-06
 
-### Changed
-
-- The libraries' new names: `@logomarks/core` (was `@logomarks/marks-kit`), `@logomarks/editor` (was `@logomarks/vector-editor`) and `@logomarks/mockups` (was `@arraypress/mockups`, now `^0.4.3`); `@logomarks/brand-kit` `^0.3.2`. No changes to the CLI itself.
-
-## [0.2.0] — 2026-11-05
+The first public release.
 
 ### Added
 
-- **Editing, headless**, from `@logomarks/vector-editor`'s ops (no DOM): `glitch` (`shear`, `slice`, `bands`, `stepped`, `lane`; the same seed gives the same bytes), `edit` (a JSON list of ops by part: delete, move, rotate, scale, flip, round, offset, mirror, radial, union, subtract, colour, two-tone), `parts` (the parts by index, box and area, and a numbered image), and `combine` (union, subtract, intersect, exclude or place two marks). Every result is fitted to 448 on 512, centred, and run through every check; a failing result exits 1.
-- **`social`**: the social pack on its own, every platform at its current size in `minimal`, `bold` and `pattern` styles, with `--platforms`, `--styles` and `--animated`.
-- **MCP tools** `list_parts`, `glitch_mark`, `edit_mark`, `combine_marks` and `social_pack`, each returning its result as an image; `brand_kit` takes `tagline`, `url`, `handle`, `styles`, `platforms`, `animated` and `social`.
-- `kit` takes `--tagline --url --handle --styles --platforms --animated --no-social`.
-- Docs in `docs/` (commands, editing, MCP tools, API); the README is trimmed.
+- **Find and get.** `find` searches the bundled Logomarks set (CC0) as logomarks.ai does: every word must match, with synonyms, plurals and UK and US trade names, and `--style`, `--tag`, `--industry` and `--letter` filters. `get` writes a live mark's SVG in a colour, or a PNG at a size.
+- **Check.** `check` runs every house rule (fit to the 512 grid, markup, specks, slivers, pin-holes, clipping, thin parts, narrow and uneven gaps), each finding with an id and a box; `--fix` refits. `similar` scores a mark against every live mark (`--letters`, `--against`, `--each`, `--all`). `specks` is the set's speck review. `sheet` draws review cards, or a plain grid with `--plain`.
+- **Edit.** `parts` lists a mark's parts by index; `edit` runs a JSON list of ops by part (delete, move, rotate, scale, flip, round, offset, mirror, radial, union, subtract, colour, two-tone); `glitch` makes glitch editions (`shear`, `slice`, `bands`, `stepped`, `lane`; the same seed gives the same bytes); `combine` makes two marks one (union, subtract, intersect, exclude, place). Every result is fitted to the grid and checked, and a failing result exits 1.
+- **Build.** `kit` writes a brand kit from `@logomarks/brand-kit`: the mark's files, favicons and app icons, lockups, an OKLCH palette with WCAG pairings, a Tailwind theme and tokens, a brand sheet, `brand.json` and a social pack. `social` writes the social pack alone. `mockup` puts the brand on one of 20 objects; `cover` draws an Open Graph image, header or post.
+- **MCP server.** `logomarks mcp` runs every command as a tool on stdio: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet`, `list_parts`, `edit_mark`, `glitch_mark`, `combine_marks`, `build_brand_kit`, `build_social_pack`, `render_mockup` and `render_cover`. Tools that make images return a preview to look at; given `out`, they write the file and return its path rather than the SVG text. Each tool carries read-only and destructive hints.
+- **Help.** `logomarks <command> --help` (or `logomarks help <command>`) for every command, with its options, defaults and examples; `--version`.
+- **Errors.** Exit codes 0 ok, 1 a check failed or the command failed, 2 usage. Errors are one line naming the command; `LOGOMARKS_DEBUG=1` adds the stack.
+- **Library.** Every function behind the commands is exported (`logomarks`), and the MCP server too (`logomarks/mcp`), with TypeScript declarations.
+- Docs in `docs/`: commands, editing, MCP tools and the API.
 
-### Changed
-
-- **The kit is `@logomarks/brand-kit`'s.** The CLI's own `kit/` and `brand/{color,lockup,type,artwork,ico}` are gone: `kit` is `brandKit()` with the bundled faces handed in as bytes and resvg-wasm as its rasteriser (so it still needs no sharp), and `mockup` and `cover` take brand-kit's palette, lockups and artwork. The kit gains the social pack, a Tailwind theme, design tokens, maskable icons, `head.html`, a brand sheet SVG and a README; its paths change (`mark/svg/`, `mark/png/mark-primary-*.png`, `social/<style>/<id>.png`), and `brand.json` follows brand-kit's shape (a live mark credited under `mark`, CC0).
-- **The palette's hex values shift slightly**: the 50–950 scale is color-utils' OKLCH scale (the brand colour held at its own step), not the CLI's, and colours are written lower case (`#ff5c3a`). This is expected.
-- The prints on mockups (cards, posters, sleeves, billboards, the laptop's page) are drawn in brand-kit's `bold` and `minimal` styles.
-- `palette`, `lockup` and `artwork` are no longer exported: import them from `@logomarks/brand-kit`. `kit()` returns brand-kit's `{ files: Map, brand }`.
-
-## [0.1.0] — 2026-11-05
-
-- `check`, `similar`, `specks`, `sheet`, `find`, `get`, `kit`, `mockup`, `cover` and the MCP server (`logomarks mcp`), on `@logomarks/marks-kit` and `@arraypress/search`.
+Built on `@logomarks/core`, `@logomarks/editor`, `@logomarks/brand-kit`, `@logomarks/mockups`, `@arraypress/covers` and `@arraypress/search`. Pure JavaScript: PNGs are drawn by resvg in WebAssembly, with no native binaries.

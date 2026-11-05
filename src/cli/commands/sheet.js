@@ -14,6 +14,26 @@ import { style } from '../style.js';
 /** What `sheet` takes. */
 export const spec = { flags: ['json', 'strict', 'plain'], options: { out: 'o', ignore: '', cols: '' } };
 
+/** `logomarks sheet --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Draw review cards for marks, as one PNG.',
+	usage: ['<file.svg | folder>… [-o sheet.png] [options]'],
+	about: [
+		'Each card: the mark large on dark and light with its findings boxed and numbered, at 32',
+		'and 16 px, and beside its three nearest live marks. Exit 1 when any mark fails a check or',
+		'is a near-copy.',
+	],
+	options: [
+		['-o, --out <file.png>', 'The PNG to write. Default sheet.png.'],
+		['--strict', 'Count warnings as failures too.'],
+		['--ignore <ids>', 'Leave these finding ids out.'],
+		['--plain', 'A plain labelled grid instead of review cards.'],
+		['--cols <n>', 'Columns in the plain grid. Default 8.'],
+	],
+	examples: ['logomarks sheet out/*.svg -o sheet.png', 'logomarks sheet out/ --plain --cols 6 -o batch.png'],
+};
+
 /**
  * Runs `sheet`.
  *

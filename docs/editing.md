@@ -1,6 +1,6 @@
 # Editing
 
-`glitch`, `edit` and `combine` (and the `glitch_mark`, `edit_mark` and `combine_marks` tools) run [`@logomarks/editor`](https://github.com/Logomarks/editor)'s operations without a page: curves are kept, booleans are exact, and the house gap is 22. Every result is fitted to the standard (longest side 448 on the 512 canvas, centred: marks-kit's `fitMark`) and run through every check, so a speck, sliver, pin-hole or stray gap a change leaves is reported with its box. The same input and seed give the same bytes.
+`glitch`, `edit` and `combine` (and the `glitch_mark`, `edit_mark` and `combine_marks` tools) run [`@logomarks/editor`](https://github.com/Logomarks/editor)'s operations without a page: curves are kept, booleans are exact, and the house gap is 22. Every result is fitted to the standard (longest side 448 on the 512 canvas, centred: @logomarks/core's `fitMark`) and run through every check, so a speck, sliver, pin-hole or stray gap a change leaves is reported with its box. The same input and seed give the same bytes.
 
 ## Glitch
 

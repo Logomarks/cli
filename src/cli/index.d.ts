@@ -4,7 +4,7 @@ export interface IO {
 	err(s: string): void;
 }
 
-/** The help text. */
+/** The help text: every verb in a line, the common examples, and where to read more. */
 export const HELP: string;
-/** Runs the CLI with `argv` (no node or script) and resolves to its exit code: 0 pass, 1 fail, 2 usage. */
+/** Runs the CLI with `argv` (no node or script) and resolves to its exit code: 0 ok, 1 a check failed or the command failed, 2 usage. */
 export function main(argv: readonly string[], io?: IO): Promise<number>;

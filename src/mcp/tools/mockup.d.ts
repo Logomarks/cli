@@ -1,6 +1,6 @@
 import type { Tool } from '../index.js';
 
-/** `mockup`'s arguments. */
+/** `render_mockup`'s arguments. */
 export interface MockupInput {
 	mark: string;
 	/** One of `OBJECTS`. */
@@ -18,5 +18,5 @@ export interface MockupInput {
 	out?: string;
 }
 
-/** `mockup`: the brand on an object, as an image. */
+/** `render_mockup`: the brand on an object, as an image. */
 export const tool: Tool<MockupInput>;

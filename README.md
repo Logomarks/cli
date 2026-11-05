@@ -1,45 +1,57 @@
 # logomarks
 
-Check a logomark the way the [Logomarks](https://logomarks.ai) set is checked (fit to the 512 grid, specks, pin-holes, slivers, clipping, even gaps, 32 px features, the nearest live marks, review sheets), edit it (glitch editions, edits by part, two marks combined), then build a brand on it: the mark's files, a brand kit, a social pack for every platform, mockups and covers. For AI coding agents (Claude Code, Codex, Cursor) and the people working with them, as a CLI and an MCP server. Pure JS: resvg in WebAssembly, no native binaries, works offline.
-
-## Quick start
+Find, check, edit and build on free geometric logomarks from the command line or an AI agent. The [Logomarks](https://logomarks.ai) set is bundled (CC0, searched offline); the CLI checks marks against the set's house rules, edits and glitches them, and builds a brand kit, social pack, mockups and covers. It also runs as an MCP server. Pure JavaScript (resvg in WebAssembly), no native binaries, Node 20 or later.
 
 ```bash
-npx logomarks check mark.svg                     # findings with ids and boxes; exit 1 on errors
-npx logomarks similar mark.svg                   # the nearest live marks, with scores
-npx logomarks find calm hexagon                  # search the live set (CC0)
+npx logomarks find coffee
+```
 
+## Commands
+
+```bash
+npx logomarks find calm hexagon                       # search the set: slugs, styles, descriptions
+npx logomarks get hex-gem --color '#ff5c3a' -o logo.svg
+npx logomarks check mark.svg                          # every house rule; exit 1 on errors
+npx logomarks similar mark.svg                        # the nearest live marks, with scores
+npx logomarks edit quad-cove --ops '[{"op":"round","radius":18}]' -o mine.svg
 npx logomarks glitch quad-cove --preset shear --seed 3 -o glitched.svg
-npx logomarks parts quad-cove                    # the parts by index, for edit --ops
-npx logomarks edit quad-cove --ops '[{"op":"delete","parts":[3]},{"op":"round","radius":18}]' -o edited.svg
-npx logomarks combine quad-cove shear-a --op subtract --scale 0.5 -o combined.svg
-
-npx logomarks kit hex-gem --name "Hexa Labs" --color '#ff5c3a' --font space-grotesk --tagline "Things in hexes" -o hexa/
-npx logomarks social hex-gem --name "Hexa Labs" --platforms instagram,linkedin --styles bold
+npx logomarks kit hex-gem --name "Hexa Labs" --color '#ff5c3a' -o hexa/
 npx logomarks mockup hex-gem --name "Hexa Labs" --object card -o card.png
-npx logomarks cover hex-gem --recipe aurora --title "Introducing Hexa" -o cover.png
 ```
 
-A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Every edit comes back fitted (448 on 512, centred) and checked, and the same seed gives the same bytes. Every verb takes `--json`. Exit codes: 0 pass, 1 fail, 2 usage.
+Also `specks`, `sheet`, `parts`, `combine`, `social`, `cover` and `mcp`. Run `logomarks --help` for the list and `logomarks <command> --help` for a command's options. A mark is a live slug or name, or the path to your own `.svg`. Every edit comes back fitted to the grid and checked. Every command takes `--json`. Exit codes: 0 ok, 1 a check failed or the command failed, 2 usage.
 
-## MCP
+## AI agents
+
+As a Claude Code plugin, with the two Logomarks skills (picking a mark, designing new ones) and this MCP server:
+
+```
+/plugin marketplace add logomarks/skills
+/plugin install logomarks@logomarks
+```
+
+The skills alone, for any agent that reads skills (Claude Code, Cursor, Codex and more):
 
 ```bash
-claude mcp add logomarks -- npx -y logomarks mcp        # Claude Code (or the logomarks plugin: skills too)
-codex mcp add logomarks -- npx -y logomarks mcp         # Codex
+npx skills add logomarks/skills
 ```
 
-Tools: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet`, `list_parts`, `glitch_mark`, `edit_mark`, `combine_marks`, `brand_kit`, `social_pack`, `mockup`, `cover`.
+The MCP server alone:
+
+```bash
+claude mcp add logomarks -- npx -y logomarks mcp
+codex mcp add logomarks -- npx -y logomarks mcp
+```
 
 ## Docs
 
-- [Commands](docs/commands.md): every verb and option, and the checks.
-- [Editing](docs/editing.md): glitch presets, the edit ops, combining.
-- [MCP tools](docs/mcp.md): each tool's arguments and what it returns.
-- [API](docs/api.md): the library behind them.
+- [Commands](docs/commands.md): every command, its options and exit codes, and the checks.
+- [Editing](docs/editing.md): glitch presets, edit ops and combining.
+- [MCP tools](docs/mcp.md): each tool, its arguments and what it returns.
+- [API](docs/api.md): the functions behind them, for use as a library.
 
-Built on [`@logomarks/core`](https://github.com/Logomarks/core) (the measures), [`@logomarks/editor`](https://github.com/Logomarks/editor) (the edits), [`@logomarks/brand-kit`](https://github.com/Logomarks/brand-kit) (the kit and social pack), [`@logomarks/mockups`](https://github.com/Logomarks/mockups) and [`@arraypress/covers`](https://github.com/arraypress/covers). The marks are CC0; the bundled typefaces are SIL OFL. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
+Built on [`@logomarks/core`](https://github.com/Logomarks/core), [`@logomarks/editor`](https://github.com/Logomarks/editor), [`@logomarks/brand-kit`](https://github.com/Logomarks/brand-kit), [`@logomarks/mockups`](https://github.com/Logomarks/mockups) and [`@arraypress/covers`](https://github.com/arraypress/covers).
 
 ## Licence
 
-MIT © ArrayPress Limited
+The CLI is MIT © ArrayPress Limited. The marks are CC0 (public domain). The bundled typefaces are SIL Open Font License 1.1 (`data/fonts/OFL.txt`).

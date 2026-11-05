@@ -41,6 +41,30 @@ test('usage errors exit 2', async () => {
 	assert.equal((await run(['check', 'missing.svg'])).code, 2);
 	assert.equal((await run(['similar', fixturePath('speck'), '--top', 'x'])).code, 2);
 	assert.equal((await run(['--help'])).code, 0);
+	const usage = await run(['check', '--nope', 'x.svg']);
+	assert.match(usage.err, /^logomarks check: unknown option --nope\nRun "logomarks check --help" for usage\.$/);
+});
+
+test('every verb has --help, with usage and options; --version prints the version', async () => {
+	const { COMMANDS } = await import('../src/cli/commands/index.js');
+	for (const verb of Object.keys(COMMANDS)) {
+		for (const argv of [[verb, '--help'], [verb, '-h'], ['help', verb]]) {
+			const r = await run(argv);
+			assert.equal(r.code, 0, argv.join(' '));
+			assert.match(r.out, new RegExp(`^logomarks ${verb}: .+\\n\\nUsage\\n  logomarks ${verb}`), argv.join(' '));
+			assert.match(r.out, /\n  -h, --help /);
+		}
+	}
+	const { version } = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+	assert.equal((await run(['--version'])).out, version);
+	assert.equal((await run(['help', 'nope'])).code, 2);
+});
+
+test('a failure that is not a usage error is one line and exit 1', async () => {
+	const r = await run(['get', 'hex-gem', '-o', path.join(fixturePath('speck'), 'x.svg')]);
+	assert.equal(r.code, 1);
+	assert.match(r.err, /^logomarks get: /);
+	assert.doesNotMatch(r.err, /\n\s+at /);
 });
 
 test('similar --json lists the nearest with verdicts', async () => {

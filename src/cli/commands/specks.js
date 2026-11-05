@@ -20,6 +20,26 @@ import { svgFiles, slugOf } from '../files.js';
 /** What `specks` takes. */
 export const spec = { flags: ['json', 'all', 'raster'], options: { piece: '', hole: '', allow: '' } };
 
+/** `logomarks specks --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'List every speck, sliver and pin-hole, with its box.',
+	usage: ['<file.svg | folder>… [options]'],
+	about: [
+		'The speck review: pieces under --piece and holes under --hole, smallest first. Tiny,',
+		'hairline, repeated and reviewed parts are left out unless --all. Render each hit large',
+		'before changing anything: many small parts are meant. Exit 1 when anything is listed.',
+	],
+	options: [
+		['--piece <area>', 'Report pieces smaller than this, in square units. Default 60.'],
+		['--hole <area>', 'Report holes smaller than this. Default 30.'],
+		['--allow <slugs>', 'Marks whose small parts are meant, comma-separated.'],
+		['--all', 'Report every small part, reviewed and repeated ones included.'],
+		['--raster', 'Read each mark from the scanline raster instead of its outline.'],
+	],
+	examples: ['logomarks specks out/', 'logomarks specks mark.svg --piece 80 --json'],
+};
+
 /**
  * A number option.
  *

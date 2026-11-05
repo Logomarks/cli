@@ -38,13 +38,13 @@ async function call(name, args) {
 
 test('lists every tool, each with a description and an input schema', async () => {
 	const { tools } = await client.listTools();
-	assert.deepEqual(tools.map((t) => t.name), ['find_marks', 'get_mark', 'check_mark', 'similar_marks', 'review_sheet', 'list_parts', 'glitch_mark', 'edit_mark', 'combine_marks', 'brand_kit', 'social_pack', 'mockup', 'cover']);
+	assert.deepEqual(tools.map((t) => t.name), ['find_marks', 'get_mark', 'check_mark', 'similar_marks', 'review_sheet', 'list_parts', 'glitch_mark', 'edit_mark', 'combine_marks', 'build_brand_kit', 'build_social_pack', 'render_mockup', 'render_cover']);
 	assert.equal(tools.length, TOOLS.length);
 	for (const t of tools) {
 		assert.ok(t.description && t.description.length > 80, t.name);
 		assert.equal(t.inputSchema.type, 'object');
 	}
-	const mockup = tools.find((t) => t.name === 'mockup');
+	const mockup = tools.find((t) => t.name === 'render_mockup');
 	assert.deepEqual(mockup?.inputSchema.required, ['mark', 'object']);
 	assert.ok(/** @type {{ enum: string[] }} */ (mockup?.inputSchema.properties?.object).enum.includes('tee'));
 	assert.match(client.getInstructions() ?? '', /find_marks/);
@@ -62,7 +62,7 @@ test('the editing and brand tools publish their choices', async () => {
 	assert.deepEqual(op.required, ['op']);
 	assert.deepEqual(props('combine_marks').op.enum, ['union', 'subtract', 'intersect', 'exclude', 'place']);
 	assert.ok(props('combine_marks').transform.properties.scale);
-	for (const name of ['brand_kit', 'social_pack']) {
+	for (const name of ['build_brand_kit', 'build_social_pack']) {
 		assert.deepEqual(props(name).styles.items.enum, ['minimal', 'bold', 'pattern']);
 		assert.equal(props(name).animated.type, 'boolean');
 		assert.match(props(name).platforms.description, /instagram-story/);
@@ -78,13 +78,14 @@ test('list_parts: the parts by index, and an image of them numbered', async () =
 	assert.match(/** @type {string} */ ((await call('list_parts', {})).error), /pass mark/);
 });
 
-test('glitch_mark: a fitted, checked SVG and its image; the same seed, the same bytes; a file when asked', async () => {
+test('glitch_mark: a fitted, checked SVG and its image; the same seed, the same bytes; a file (and its path, not the SVG) when asked', async () => {
 	const a = await call('glitch_mark', { mark: 'shear-a', preset: 'slice', seed: 4, out: 'glitched.svg' });
 	const b = await call('glitch_mark', { mark: 'shear-a', preset: 'slice', seed: 4 });
 	assert.equal(a.json.ok, true);
-	assert.equal(a.json.svg, b.json.svg);
+	assert.equal(a.json.svg, undefined);
+	assert.equal(a.json.file, path.join(dir, 'glitched.svg'));
 	assert.equal(a.json.checks.size.w === 448 || a.json.checks.size.h === 448, true);
-	assert.equal(fs.readFileSync(path.join(dir, 'glitched.svg'), 'utf8'), a.json.svg);
+	assert.equal(fs.readFileSync(path.join(dir, 'glitched.svg'), 'utf8'), b.json.svg);
 	assert.equal(a.images.length, 1);
 	assert.match(/** @type {string} */ ((await call('glitch_mark', { mark: 'shear-a', preset: 'lane' })).error), /Track mark/);
 });
@@ -99,13 +100,13 @@ test('edit_mark and combine_marks: ops and booleans, each checked', async () => 
 	assert.equal(c.images.length, 1);
 });
 
-test('social_pack: writes the folder, and a preview of each style', async () => {
-	const r = await call('social_pack', { mark: 'hex-gem', name: 'Hexa', platforms: ['x-header'], styles: ['minimal', 'bold'] });
+test('build_social_pack: writes the folder, and a preview of each style', async () => {
+	const r = await call('build_social_pack', { mark: 'hex-gem', name: 'Hexa', platforms: ['x-header'], styles: ['minimal', 'bold'] });
 	assert.equal(r.json.dir, path.join(dir, 'hexa-social'));
 	assert.ok(r.json.files.includes('bold/x-header.png'));
 	assert.equal(r.images.length, 2);
 	assert.ok(r.images.every((/** @type {{ width: number }} */ i) => i.width <= 800));
-	assert.match(/** @type {string} */ ((await call('social_pack', { mark: 'hex-gem', platforms: ['myspace'] })).error), /myspace/);
+	assert.match(/** @type {string} */ ((await call('build_social_pack', { mark: 'hex-gem', platforms: ['myspace'] })).error), /myspace/);
 });
 
 test('find_marks: words and filters; no arguments lists the facets', async () => {
@@ -132,11 +133,13 @@ test('findMarks searches as the board does: synonyms, phrases, plurals, filler w
 	assert.equal(findMarks('fox zzqx').total, 0);
 });
 
-test('get_mark: the SVG, a PNG when sized, and a file when asked', async () => {
+test('get_mark: the SVG, a PNG when sized, and a file (its path, not the SVG) when asked', async () => {
 	const r = await call('get_mark', { mark: 'Hex Gem', color: '#ff5c3a', size: 64, out: 'out/hex.png' });
 	assert.equal(r.json.slug, 'hex-gem');
 	assert.equal(r.json.licence, 'CC0-1.0');
-	assert.match(r.json.svg, /fill="#FF5C3A"/i);
+	assert.equal(r.json.svg, undefined);
+	assert.equal(r.json.file, path.join(dir, 'out/hex.png'));
+	assert.match((await call('get_mark', { mark: 'Hex Gem', color: '#ff5c3a' })).json.svg, /fill="#FF5C3A"/i);
 	assert.deepEqual(r.images, [{ width: 64, height: 64 }]);
 	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'out/hex.png'))), { width: 64, height: 64 });
 	const plain = await call('get_mark', { mark: 'hex-gem' });
@@ -189,29 +192,29 @@ test('review_sheet: the cards as an image, a summary, and a file when asked', as
 	assert.ok(fs.existsSync(path.join(dir, 'sheet.png')));
 });
 
-test('brand_kit: writes the folder and returns its path and the brand sheet', async () => {
-	const r = await call('brand_kit', { mark: 'hex-gem', name: 'Hexa Labs', color: '#ff5c3a', font: 'space-grotesk', tagline: 'Labs', styles: ['pattern'], platforms: ['x-avatar'] });
+test('build_brand_kit: writes the folder and returns its path and the brand sheet', async () => {
+	const r = await call('build_brand_kit', { mark: 'hex-gem', name: 'Hexa Labs', color: '#ff5c3a', font: 'space-grotesk', tagline: 'Labs', styles: ['pattern'], platforms: ['x-avatar'] });
 	assert.equal(r.json.dir, path.join(dir, 'hexa-labs-kit'));
 	assert.equal(r.json.colors.primary, '#ff5c3a');
 	assert.ok(r.json.files.includes('social/pattern/x-avatar.png'));
 	assert.equal(r.images.length, 1);
 	for (const f of ['brand.json', 'brand-sheet.png', 'favicon/favicon.ico', 'colors/palette.css']) assert.ok(fs.existsSync(path.join(r.json.dir, f)), f);
 	assert.equal(r.json.count, r.json.files.length);
-	assert.match(/** @type {string} */ ((await call('brand_kit', { mark: 'hex-gem', font: 'comic-sans' })).error), /font/);
+	assert.match(/** @type {string} */ ((await call('build_brand_kit', { mark: 'hex-gem', font: 'comic-sans' })).error), /font/);
 });
 
-test('mockup: an image, and a file when asked', async () => {
-	const r = await call('mockup', { mark: 'hex-gem', object: 'card', name: 'Hexa', size: 600, out: 'card.svg' });
+test('render_mockup: an image, and a file when asked', async () => {
+	const r = await call('render_mockup', { mark: 'hex-gem', object: 'card', name: 'Hexa', size: 600, out: 'card.svg' });
 	assert.equal(r.images.length, 1);
 	assert.equal(Math.max(r.images[0].width, r.images[0].height), 600);
 	assert.match(fs.readFileSync(path.join(dir, 'card.svg'), 'utf8'), /^<svg/);
-	assert.match(/** @type {string} */ ((await call('mockup', { mark: 'hex-gem', object: 'card', layout: 'nope' })).error), /card layouts: pair/);
-	assert.ok((await call('mockup', { mark: 'hex-gem', object: 'spaceship' })).error);
+	assert.match(/** @type {string} */ ((await call('render_mockup', { mark: 'hex-gem', object: 'card', layout: 'nope' })).error), /card layouts: pair/);
+	assert.ok((await call('render_mockup', { mark: 'hex-gem', object: 'spaceship' })).error);
 });
 
-test('cover: an image at the aspect asked, and a file when asked', async () => {
-	const r = await call('cover', { mark: 'hex-gem', recipe: 'aurora', title: 'Introducing Hexa', aspect: '1:1', width: 400, out: 'cover.png' });
+test('render_cover: an image at the aspect asked, and a file when asked', async () => {
+	const r = await call('render_cover', { mark: 'hex-gem', recipe: 'aurora', title: 'Introducing Hexa', aspect: '1:1', width: 400, out: 'cover.png' });
 	assert.deepEqual(r.images, [{ width: 400, height: 400 }]);
 	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'cover.png'))), { width: 400, height: 400 });
-	assert.ok((await call('cover', { mark: 'hex-gem', aspect: 'wide' })).error);
+	assert.ok((await call('render_cover', { mark: 'hex-gem', aspect: 'wide' })).error);
 });

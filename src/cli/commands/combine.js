@@ -13,6 +13,26 @@ import { output } from '../edited.js';
 /** What `combine` takes. */
 export const spec = { flags: ['json'], options: { out: 'o', op: '', scale: '', rotate: '', flip: '', x: '', y: '' } };
 
+/** `logomarks combine --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Combine two marks into one.',
+	usage: ['<a> <b> [--op union] [-o out.svg] [options]'],
+	about: [
+		"b is placed over a on the 512 canvas (both fitted first), then combined. The result is",
+		'fitted and checked; exit 1 when it fails a check.',
+	],
+	options: [
+		['--op <op>', `${COMBINE_OPS.join(', ')}. Default union.`],
+		['--scale <factor>', 'Scale b about its own centre. Default 1.'],
+		['--rotate <deg>', 'Turn b clockwise about its own centre. Default 0.'],
+		['--flip <axis>', 'Flip b: horizontal or vertical.'],
+		['--x <units>, --y <units>', 'Move b across and down. Default 0.'],
+		['-o, --out <file>', 'Write .svg, or .png drawn at 512. Default: the SVG to stdout.'],
+	],
+	examples: ['logomarks combine quad-cove shear-a --op subtract --scale 0.5 -o combined.svg', 'logomarks combine a.svg b.svg --op place --x 120 -o both.png'],
+};
+
 /**
  * Runs `combine`.
  *

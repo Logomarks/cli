@@ -1,6 +1,6 @@
 import type { Tool } from '../index.js';
 
-/** `cover`'s arguments. */
+/** `render_cover`'s arguments. */
 export interface CoverInput {
 	mark: string;
 	/** One of `RECIPES`. */
@@ -16,5 +16,5 @@ export interface CoverInput {
 	out?: string;
 }
 
-/** `cover`: a cover with the mark on it, as an image. */
+/** `render_cover`: a cover with the mark on it, as an image. */
 export const tool: Tool<CoverInput>;

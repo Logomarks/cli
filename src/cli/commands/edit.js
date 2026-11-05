@@ -10,9 +10,31 @@ import { editMark } from '../../edit/ops.js';
 import { UsageError } from '../args.js';
 import { markArg, asUsage } from '../options.js';
 import { output } from '../edited.js';
+import { OPS } from '../../edit/ops.js';
+import { wrapList } from '../help.js';
 
 /** What `edit` takes. */
 export const spec = { flags: ['json'], options: { out: 'o', ops: '' } };
+
+/** `logomarks edit --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Edit a mark by part, with a list of ops.',
+	usage: ["<mark> --ops '<json>' [-o out.svg]", '<mark> --ops @ops.json [-o out.svg]'],
+	about: [
+		'Ops run in order; "parts" are indices from logomarks parts. The result is fitted and',
+		'checked, and exit 1 means it fails a check. Each op\'s settings: docs/editing.md.',
+		`Ops: ${wrapList(Object.keys(OPS), 66)}.`,
+	],
+	options: [
+		['--ops <json | @file>', 'The ops as a JSON array, or @ and a file holding one.'],
+		['-o, --out <file>', 'Write .svg, or .png drawn at 512. Default: the SVG to stdout.'],
+	],
+	examples: [
+		`logomarks edit quad-cove --ops '[{"op":"delete","parts":[3]},{"op":"round","radius":18}]' -o mine.svg`,
+		'logomarks edit mark.svg --ops @ops.json -o mine.png',
+	],
+};
 
 /**
  * The ops option: JSON, or `@file` holding it.

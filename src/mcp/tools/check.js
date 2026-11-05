@@ -16,7 +16,7 @@ export const tool = {
 	name: 'check_mark',
 	title: 'Check a mark against the house rules',
 	description: [
-		'Measure an SVG logomark the way the Logomarks set is checked; reading SVG code can\'t show these.',
+		'Check SVG logomarks against the house rules; use it on every mark you draw or edit, because reading SVG code can\'t show these.',
 		'Errors: viewbox, size, centre, clipped (fit to the 512 canvas, longest side 448, centred: fix=true refits), markup (filled paths only), empty, speck, sliver, pinhole (stray pieces and holes under 60 / 30 sq units, each with its box).',
 		'Warnings: fill (currentColor), precision (one decimal), thin and narrow-gap (under 10 units: lost at 32 px), uneven-gaps (keep one gap, 22, or a clear 1:2).',
 		'Returns { ok, passed, failed, marks: [{ name, ok, errors, warnings, size, findings: [{ id, severity, message, box }] }] }.',
@@ -26,7 +26,7 @@ export const tool = {
 		svg: schema.svg,
 		svgName: schema.svgName,
 		paths: schema.paths,
-		fix: z.boolean().optional().describe('Refit to the grid (the only automatic fix): files are rewritten in place; for svg text the refitted SVG is returned. Default false.'),
+		fix: z.boolean().optional().describe('Refit to the grid (the only automatic fix): files in paths are rewritten in place; for svg text the refitted SVG is returned. Default false.'),
 		strict: schema.strict,
 		ignore: schema.ignore,
 	},

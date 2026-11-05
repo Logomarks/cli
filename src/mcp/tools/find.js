@@ -13,14 +13,14 @@ export const tool = {
 	name: 'find_marks',
 	title: 'Find live Logomarks',
 	description: [
-		'Search the free Logomarks set (1,500+ geometric logomarks, CC0, bundled offline) for marks to use or build on.',
+		'Search the free Logomarks set (geometric logomarks, CC0, bundled offline): use it first when someone needs a logo, icon or brand mark, or a mark to build on.',
 		'Search works as on logomarks.ai: every word must be found in a mark (its name, search words, industries, style, tags, mood, letter or description), trades by their UK and US names too ("solicitor" finds the lawyers\' marks); the best fits come first. Filler words (a, for, logo) are ignored.',
 		'Filters narrow it exactly. Call with no arguments to list every style, tag, mood and industry with its count.',
-		'Returns slugs to pass to get_mark, brand_kit, mockup or cover; each has a description and its page on logomarks.ai.',
+		'Returns { total, marks: [{ slug, name, style, description, url … }] }: pass a slug to get_mark, build_brand_kit, render_mockup or render_cover.',
 	].join(' '),
 	inputSchema: {
 		query: z.string().optional().describe('Free words: what it should look like or be for, e.g. "fox", "calm hexagon", "coffee", "letter k".'),
-		style: z.string().optional().describe('One style, e.g. letter, badge, monogram, iso, line, grid, glitch, animal, bold, modular, woven, inflated.'),
+		style: z.string().optional().describe('One style, e.g. letter, badge, monogram, iso, line, grid, glitch, animal, bold, modular, woven, inflated. Call with no arguments for every style.'),
 		tags: z.array(z.string()).optional().describe('Tags a mark must all have: round, square, symmetric, radial, solid, light, wide, tall, letter, number, new.'),
 		industry: z.string().optional().describe('An industry it suits, e.g. coffee, fintech, ai, law-firm, real-estate, fitness, music.'),
 		letter: z.string().max(2).optional().describe('The letter or number a letter mark shows, e.g. "K" or "7".'),

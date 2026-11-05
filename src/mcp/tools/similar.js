@@ -16,7 +16,7 @@ export const tool = {
 	name: 'similar_marks',
 	title: 'Find the nearest live marks',
 	description: [
-		'Compare a new mark with every live Logomark, by outline (rotations and mirrors included).',
+		'Find the live Logomarks nearest to a new mark, by outline (rotations and mirrors included); use it before handing over a mark you drew or edited.',
 		`A score of ${SIMILAR.tooClose}+ is too close (compare the two by eye: solid shapes often share an outline); ${SIMILAR.nearCopy}+ is a near-copy and fails.`,
 		`letters=true compares a badge's knocked-out letter instead (${LETTERS.tooClose} / ${LETTERS.nearCopy}).`,
 		'Returns { ok, thresholds, marks: [{ name, ok, tooClose, matches: [{ slug, name, score, verdict }] }] }. ok is false when any mark is a near-copy.',

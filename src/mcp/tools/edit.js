@@ -37,10 +37,10 @@ export const tool = {
 	name: 'edit_mark',
 	title: 'Edit a mark',
 	description: [
-		'Edit a mark with a list of ops, run in order, with the vector editor’s own operations (curves kept, booleans exact).',
+		'Edit a mark by part with a list of ops, run in order (the vector editor’s own operations: curves kept, booleans exact). Use it to change a live mark or fix one you drew.',
 		`Ops: ${Object.entries(OPS).map(([k, v]) => `${k} (${v.about})`).join('; ')}.`,
 		'Call list_parts first to see each part’s index, box and area. Example: [{"op":"delete","parts":[3]},{"op":"round","radius":12},{"op":"mirror","axis":"vertical"}].',
-		'Returns { ok, parts (after), svg (512 canvas, longest side 448, centred), checks } and the result as an image. Fix any speck, sliver or gap the checks report.',
+		'Returns { ok, parts (after), svg (512 canvas, longest side 448, centred; the file path instead with out), checks } and the result as an image. Fix any speck, sliver or gap the checks report.',
 	].join(' '),
 	inputSchema: {
 		mark: schema.source,
@@ -60,7 +60,7 @@ export const parts = {
 	name: 'list_parts',
 	title: 'List a mark’s parts',
 	description: [
-		'A mark’s parts, by index in drawing order: what edit_mark’s parts name. Each with its box [x0, y0, x1, y1] and centre on the 512 canvas, its area (holes taken out), its holes and its tone.',
+		'List a mark’s parts by index in drawing order; call it before edit_mark, whose ops name parts by these indices. Each part has its box [x0, y0, x1, y1] and centre on the 512 canvas, its area (holes taken out), its holes and its tone.',
 		'Returns { count, parts } and an image of the mark with every part boxed and numbered.',
 	].join(' '),
 	inputSchema: { mark: schema.source, svg: schema.sourceSvg },

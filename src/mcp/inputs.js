@@ -20,7 +20,7 @@ import { expandSvgs, slugOf } from '../util/files.js';
 /** The schemas the tools share. */
 export const schema = {
 	mark: z.string().min(1).describe('The mark: a live slug ("hex-gem") or name ("Hex Gem") from find_marks, or the path to your own .svg file (fitted to the 512 grid first).'),
-	color: z.string().optional().describe('The brand colour as hex, e.g. "#ff5c3a". Defaults to the Logomarks yellow.'),
+	color: z.string().optional().describe('The brand colour as hex, e.g. "#ff5c3a". Default "#d4ff3a" (the Logomarks lime).'),
 	font: z.enum(/** @type {[string, ...string[]]} */ (Object.keys(FONTS))).optional().describe('The typeface for the brand name (all SIL OFL). Defaults to inter.'),
 	name: z.string().optional().describe("The brand's name, set beside the mark. Defaults to the mark's name."),
 	svg: z.string().optional().describe('One mark as SVG text. Use this or paths.'),
@@ -31,7 +31,7 @@ export const schema = {
 	seed: z.string().optional().describe('Drives every random choice; the same seed gives the same image. Defaults to the mark\'s slug.'),
 	source: z.string().optional().describe('The mark: a live slug or name, or the path to an .svg file. Use this or svg.'),
 	sourceSvg: z.string().optional().describe('The mark as SVG text (fitted to the 512 grid first). Use this or mark.'),
-	out: z.string().optional().describe('Also write the result here (.svg). Relative to the working folder.'),
+	out: z.string().optional().describe('Also write the result here (.svg); the result then gives the path instead of the SVG text. Relative to the working folder; an existing file is replaced.'),
 	tagline: z.string().optional().describe('A short line under the name on social images and the brand sheet.'),
 	url: z.string().optional().describe("The brand's website, for the brand sheet and the email signature."),
 	handle: z.string().optional().describe('The social handle, e.g. "@hexalabs". Defaults to @ and the name.'),

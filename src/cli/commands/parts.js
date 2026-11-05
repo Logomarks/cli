@@ -13,6 +13,16 @@ import { style, pad } from '../style.js';
 /** What `parts` takes. */
 export const spec = { flags: ['json'], options: { out: 'o' } };
 
+/** `logomarks parts --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: "List a mark's parts by index, as edit --ops names them.",
+	usage: ['<mark> [-o parts.png]'],
+	about: ['A mark is a live slug or name, or the path to your own .svg (fitted to the grid first).'],
+	options: [['-o, --out <file.png>', 'Also draw the mark with every part boxed and numbered.']],
+	examples: ['logomarks parts quad-cove', 'logomarks parts mark.svg -o parts.png'],
+};
+
 /**
  * Runs `parts`.
  *
