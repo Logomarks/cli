@@ -43,13 +43,13 @@ export async function similar(svg, { top = 5, letters = false, index = loadIndex
 		const vs = variants(holes);
 		out = index.letters.map((l) => {
 			const m = index.marks[l.mark], score = best(vs, l.sig);
-			return { slug: m.slug, name: m.name, score, verdict: verdict(score, LETTERS), by: l.kind === 'hole' ? 'letter (hole)' : 'letter (ink)' };
+			return { slug: m.slug, name: m.name, score, verdict: verdict(score, LETTERS), by: l.kind === 'hole' ? 'letter (hole)' : 'letter (ink)', ...(m.candidate && { candidate: true }) };
 		});
 	} else {
 		const vs = variants(await outlineSignature(svg));
 		out = index.marks.map((m) => {
 			const score = best(vs, m.outline);
-			return { slug: m.slug, name: m.name, score, verdict: verdict(score, SIMILAR), by: 'outline' };
+			return { slug: m.slug, name: m.name, score, verdict: verdict(score, SIMILAR), by: 'outline', ...(m.candidate && { candidate: true }) };
 		});
 	}
 	return out

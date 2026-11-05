@@ -7,11 +7,12 @@
 
 import fs from 'node:fs';
 import { sheet } from '../../sheet/index.js';
+import { gridSheet } from '../../sheet/grid.js';
 import { svgFiles, slugOf } from '../files.js';
 import { style } from '../style.js';
 
 /** What `sheet` takes. */
-export const spec = { flags: ['json', 'strict'], options: { out: 'o', ignore: '' } };
+export const spec = { flags: ['json', 'strict', 'plain'], options: { out: 'o', ignore: '', cols: '' } };
 
 /**
  * Runs `sheet`.
@@ -24,6 +25,11 @@ export async function run(args, io) {
 	const files = svgFiles(args.positionals);
 	const out = args.options.out ?? 'sheet.png';
 	const marks = files.map((file) => ({ name: slugOf(file), svg: fs.readFileSync(file, 'utf8') }));
+	if (args.flags.has('plain')) {
+		fs.writeFileSync(out, await gridSheet(marks, { cols: Number(args.options.cols ?? 8) || 8 }));
+		io.out(`${style.green('✓')} wrote ${style.bold(out)}: ${marks.length} mark${marks.length === 1 ? '' : 's'} in a plain grid.`);
+		return 0;
+	}
 	const s = await sheet(marks, { strict: args.flags.has('strict'), ignore: (args.options.ignore ?? '').split(',').filter(Boolean) });
 	fs.writeFileSync(out, s.png);
 	const rows = s.marks.map((m, i) => ({

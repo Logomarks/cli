@@ -24,6 +24,8 @@ export interface IndexedMark extends MarkAbout {
 	svg: string;
 	/** Its outline signature: 48 px coverage, blurred. */
 	outline: Float32Array;
+	/** A candidate compared alongside (`similar --each`), not a live mark. */
+	candidate?: true;
 }
 
 /** A letter signature: a badge's holes or a letter mark's ink. */

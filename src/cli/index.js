@@ -40,8 +40,15 @@ Check
   logomarks similar <file.svg…>            the nearest live marks, with scores
       --top 5                              how many
       --letters                            compare a badge's knocked-out letter instead of its outline
+      --against <dir>                      a folder of SVGs instead of the bundled live marks
+      --each                               the candidates against each other too (marked *)
+  logomarks similar --all <data dir> [--out similar.json]
+                                           every mark's 8 nearest ("More like this") for a whole set
+  logomarks specks <folder | file.svg…>    the speck review: every piece under 60 and hole under 30, with its box
+      --piece 60 --hole 30 --allow slug,slug --all --raster
   logomarks sheet <file.svg…> -o sheet.png review cards: large on dark and light, 32 and 16 px,
                                            nearest live marks, check badges
+      --plain [--cols 8]                   a plain labelled grid instead (a quick look at a batch)
 
 Find
   logomarks find <words…>                  search the live set: "fox", "calm hexagon", "coffee"

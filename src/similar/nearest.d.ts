@@ -12,6 +12,8 @@ export interface Match {
 	verdict: Verdict;
 	/** What was compared: the outline, or a badge's knocked-out letter against a badge's hole or a letter mark's ink. */
 	by: 'outline' | 'letter (hole)' | 'letter (ink)';
+	/** Another candidate, not a live mark (`similar --each`). */
+	candidate?: true;
 }
 
 /** What to compare. */
