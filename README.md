@@ -38,7 +38,7 @@ A mark is a live slug or name, or your own `.svg` (fitted to the grid first). Ev
 | `thin`, `narrow-gap` | warning | Strokes or gaps under 10 units: they vanish or close up at 32 px. |
 | `uneven-gaps` | warning | One gap width per mark (22), or a clear 1:2 ratio. |
 
-`--strict` fails warnings too; `--ignore speck,uneven-gaps` leaves ids out. `similar` flags 0.72 and up as too close (look at the two side by side) and fails at 0.9 (a near-copy); `--letters` compares a badge's knocked-out letter instead (0.7 / 0.85); `--against <dir>` compares with a folder of SVGs instead of the live set, `--each` with the other candidates too, and `similar --all <data dir> --out similar.json` writes "More like this" for a whole set. `specks` is the set's speck review (`--piece 60 --hole 30 --allow slugs --all --raster`); `sheet --plain` draws a plain labelled grid. The measures come from [`@arraypress/marks-kit`](https://github.com/arraypress/marks-kit).
+`--strict` fails warnings too; `--ignore speck,uneven-gaps` leaves ids out. `similar` flags 0.72 and up as too close (look at the two side by side) and fails at 0.9 (a near-copy); `--letters` compares a badge's knocked-out letter instead (0.7 / 0.85); `--against <dir>` compares with a folder of SVGs instead of the live set, `--each` with the other candidates too, and `similar --all <data dir> --out similar.json` writes "More like this" for a whole set. `specks` is the set's speck review (`--piece 60 --hole 30 --allow slugs --all --raster`); `sheet --plain` draws a plain labelled grid. The measures come from [`@logomarks/marks-kit`](https://github.com/Logomarks/marks-kit).
 
 ## Build
 

@@ -5,7 +5,7 @@
  * in a box, a raster chip.
  */
 
-import { body, viewBox } from '@arraypress/marks-kit/svg';
+import { body, viewBox } from '@logomarks/marks-kit/svg';
 import { LABEL_FONT_BOLD } from '../brand/fonts.js';
 import { COLORS, FONT } from './theme.js';
 

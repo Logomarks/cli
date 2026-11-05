@@ -11,8 +11,8 @@
  */
 
 import fs from 'node:fs';
-import { shapes } from '@arraypress/marks-kit/svg';
-import { markParts, smallParts } from '@arraypress/marks-kit/analyse';
+import { shapes } from '@logomarks/marks-kit/svg';
+import { markParts, smallParts } from '@logomarks/marks-kit/analyse';
 import { SPECKS, REVIEWED } from '../../rules.js';
 import { UsageError } from '../args.js';
 import { svgFiles, slugOf } from '../files.js';

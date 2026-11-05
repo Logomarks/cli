@@ -10,13 +10,13 @@
  */
 
 import { SPECKS, REVIEWED } from '../rules.js';
-import { markParts, smallParts } from '@arraypress/marks-kit/analyse';
+import { markParts, smallParts } from '@logomarks/marks-kit/analyse';
 import { finding } from './finding.js';
 
 /**
  * A mark's specks, slivers and pin-holes, smallest first.
  *
- * @param {readonly import('@arraypress/marks-kit/svg').FilledPath[]} paths The mark's shapes.
+ * @param {readonly import('@logomarks/marks-kit/svg').FilledPath[]} paths The mark's shapes.
  * @param {string} name The mark's name (its slug: seeds the booleans' jitter, and finds a reviewed mark).
  * @returns {import('./finding.js').Finding[]} Specks, slivers and pin-holes, smallest first.
  */

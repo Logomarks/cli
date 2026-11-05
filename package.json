@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@arraypress/covers": "^1.1.0",
-    "@arraypress/marks-kit": "^0.1.0",
+    "@logomarks/marks-kit": "^0.1.1",
     "@arraypress/mockups": "^0.1.1",
     "@modelcontextprotocol/sdk": "1.32.1",
     "@resvg/resvg-wasm": "2.6.2",

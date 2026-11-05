@@ -9,7 +9,7 @@
  */
 
 import { GAPS, MIN_FEATURE, WIDTH_SCALE, WIDTH_PRECISION, CHIPS } from '../rules.js';
-import { widths } from '@arraypress/marks-kit/analyse';
+import { widths } from '@logomarks/marks-kit/analyse';
 import { finding } from './finding.js';
 
 /** Pixels a unit at the smallest chip that must still read (32 px). */
@@ -18,7 +18,7 @@ const AT_32 = CHIPS[0] / 512;
 /**
  * How a group reads in a message: "3 gaps 9.8 wide".
  *
- * @param {import('@arraypress/marks-kit/analyse').RunGroup} g The group.
+ * @param {import('@logomarks/marks-kit/analyse').RunGroup} g The group.
  * @param {string} noun What it is.
  * @returns {string} The words.
  */
@@ -27,13 +27,13 @@ const describe = (g, noun) => `${g.count > 1 ? `${g.count} ${noun}s` : `A ${noun
 /**
  * Width findings for one mark: thin strokes, narrow gaps, uneven gaps.
  *
- * @param {readonly import('@arraypress/marks-kit/svg').FilledPath[]} paths The mark's shapes.
+ * @param {readonly import('@logomarks/marks-kit/svg').FilledPath[]} paths The mark's shapes.
  * @returns {import('./finding.js').Finding[]} What was found.
  */
 export function widthFindings(paths) {
 	const { gaps, strokes } = widths(paths, { ...GAPS, scale: WIDTH_SCALE, pad: 4 });
 	const out = [];
-	const under = (/** @type {import('@arraypress/marks-kit/analyse').RunGroup} */ g) => g.width < MIN_FEATURE - WIDTH_PRECISION;
+	const under = (/** @type {import('@logomarks/marks-kit/analyse').RunGroup} */ g) => g.width < MIN_FEATURE - WIDTH_PRECISION;
 	for (const g of strokes.filter(under)) {
 		out.push(finding('thin', `${describe(g, 'stroke')}: under ${MIN_FEATURE}, it fades at 32 px (${(g.width * AT_32).toFixed(2)} px).`, { box: g.box, value: g.width }));
 	}

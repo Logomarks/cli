@@ -66,7 +66,7 @@ async function chips(svg, x, y) {
  * Where a finding is, as a box (a point becomes a small box round it).
  *
  * @param {import('../checks/finding.js').Finding} f The finding.
- * @returns {import('@arraypress/marks-kit/geometry').Box} Its box on the canvas.
+ * @returns {import('@logomarks/marks-kit/geometry').Box} Its box on the canvas.
  */
 function where(f) {
 	if (f.box) return f.box;

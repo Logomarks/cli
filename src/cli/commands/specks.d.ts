@@ -1,4 +1,4 @@
-import type { Box } from '@arraypress/marks-kit/geometry';
+import type { Box } from '@logomarks/marks-kit/geometry';
 import type { ArgSpec, Parsed } from '../args.js';
 import type { IO } from '../index.js';
 

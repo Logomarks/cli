@@ -9,8 +9,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadIndex } from '../similar/store.js';
-import { fitMark } from '@arraypress/marks-kit/fit';
-import { body } from '@arraypress/marks-kit/svg';
+import { fitMark } from '@logomarks/marks-kit/fit';
+import { body } from '@logomarks/marks-kit/svg';
 import { render } from '../raster/render.js';
 import { CANVAS } from '../rules.js';
 import { round } from '../util/round.js';

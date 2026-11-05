@@ -2,12 +2,12 @@
  * @module logomarks/similar/signature
  *
  * What two marks are compared by (dupcheck.mjs and holecheck.mjs), rendered with
- * the CLI's renderer and measured by @arraypress/marks-kit: the outline (48 px,
+ * the CLI's renderer and measured by @logomarks/marks-kit: the outline (48 px,
  * blurred 3×3) and the letter (a badge's holes or a letter mark's ink, cropped
  * to 40 px), both compared by overlap (IoU) in all 8 rotations and flips.
  */
 
-import { blur, variants, iou, outlineSignature as signatureOf, letterSignatures as lettersOf } from '@arraypress/marks-kit/similar';
+import { blur, variants, iou, outlineSignature as signatureOf, letterSignatures as lettersOf } from '@logomarks/marks-kit/similar';
 import { SIMILAR, LETTERS } from '../rules.js';
 import { coverage } from '../raster/render.js';
 
