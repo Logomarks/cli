@@ -1,7 +1,7 @@
 /**
  * @module logomarks/mockup
  *
- * The brand on a 2D object, with `@arraypress/mockups` (its layered SVG,
+ * The brand on a 2D object, with `@logomarks/mockups` (its layered SVG,
  * rasterised by resvg here). What goes on the object depends on it: a
  * garment, mug or bag carries the mark alone; anything printed edge to edge
  * (a card, a poster, a sleeve, a screen, a billboard) carries simple branded
@@ -9,7 +9,7 @@
  * left out, and so is the bus shelter (one of its blurs stops resvg 2.6).
  */
 
-import * as mockups from '@arraypress/mockups';
+import * as mockups from '@logomarks/mockups';
 import { palette as makePalette, parseColor, onColor, contrast, GRAPHIC, DEFAULT_COLOR } from '../brand/color.js';
 import { DEFAULT_FONT } from '../brand/fonts.js';
 import { paint, tile, slugify } from '../brand/mark.js';
