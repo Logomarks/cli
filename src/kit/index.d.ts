@@ -1,4 +1,4 @@
-import type { BrandKit, SocialPack, StyleId } from '@arraypress/brand-kit';
+import type { BrandKit, SocialPack, StyleId } from '@logomarks/brand-kit';
 import type { BrandOptions } from '../brand/brand.js';
 
 /** What goes in a social pack. */

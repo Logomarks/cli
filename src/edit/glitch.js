@@ -1,12 +1,12 @@
 /**
  * @module logomarks/edit/glitch
  *
- * A glitch edition of a mark in one step (`@arraypress/vector-editor`'s
+ * A glitch edition of a mark in one step (`@logomarks/vector-editor`'s
  * `glitch`): cut with the house gap and the pieces slid, the cuts placed by
  * a seed, so the same seed gives the same bytes.
  */
 
-import { glitch, GLITCH_DEFAULTS } from '@arraypress/vector-editor/ops';
+import { glitch, GLITCH_DEFAULTS } from '@logomarks/vector-editor/ops';
 import { toDoc, finish } from './doc.js';
 
 /** The presets by the names the CLI and the tools use, and the editor's own. */
@@ -32,9 +32,8 @@ export const PRESET_ABOUT = {
 export function glitchMark(svg, { preset, angle, place, slide, gap, cuts, seed = GLITCH_DEFAULTS.seed, name }) {
 	const kind = PRESETS[preset];
 	if (!kind) throw new RangeError(`no preset "${preset}": one of ${Object.keys(PRESETS).join(', ')}`);
-	// Unset settings are left out: the editor spreads its defaults under these, so an undefined would override one.
-	const settings = Object.fromEntries(Object.entries({ angle, position: place, offset: slide, gap, count: cuts, seed }).filter(([, v]) => v !== undefined));
-	const r = glitch(toDoc(svg), [], kind, settings);
+	// Unset settings may be undefined: vector-editor 0.2.2 and later keep its defaults for them.
+	const r = glitch(toDoc(svg), [], kind, { angle, position: place, offset: slide, gap, count: cuts, seed });
 	if (r.rejected) throw new RangeError(`no clean ${preset} for this mark at seed ${seed}: every placement left a speck or a sliver. Try another seed, angle or place.`);
 	if (!r.cuts.length) throw new RangeError(preset === 'lane' ? 'a lane change needs a Track mark (parallel lines with a gap); none was found' : `the ${preset} cut misses the mark: try another place or angle`);
 	return {

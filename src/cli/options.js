@@ -10,7 +10,7 @@ import { UsageError } from './args.js';
 import { loadMark, MarkNotFound } from '../brand/mark.js';
 import { parseColor } from '../util/color.js';
 import { fontId, FONTS } from '../brand/fonts.js';
-import { STYLE_IDS } from '@arraypress/brand-kit';
+import { STYLE_IDS } from '@logomarks/brand-kit';
 
 export { writeFile, writeFiles } from '../util/files.js';
 
@@ -134,7 +134,7 @@ export function packArgs(args) {
 	const styles = listArg(args.options.styles);
 	const bad = styles?.filter((s) => !(/** @type {readonly string[]} */ (STYLE_IDS)).includes(s));
 	if (bad?.length) throw new UsageError(`--styles takes ${STYLE_IDS.join(', ')}, not ${bad.join(', ')}`);
-	return { styles: /** @type {import('@arraypress/brand-kit').StyleId[] | undefined} */ (styles), platforms: listArg(args.options.platforms), animated: args.flags.has('animated') };
+	return { styles: /** @type {import('@logomarks/brand-kit').StyleId[] | undefined} */ (styles), platforms: listArg(args.options.platforms), animated: args.flags.has('animated') };
 }
 
 /**

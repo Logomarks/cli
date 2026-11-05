@@ -24,7 +24,7 @@ export function initRenderer(): Promise<void>;
 export function warmRenderer(): Promise<void>;
 /** Renders an SVG with resvg (WebAssembly). */
 export function render(svg: string, o?: RenderOptions): Promise<Rendered>;
-/** An SVG drawn to a PNG at a width: the rasteriser handed to `@arraypress/brand-kit`. */
+/** An SVG drawn to a PNG at a width: the rasteriser handed to `@logomarks/brand-kit`. */
 export function rasterize(svg: string, size: { width: number; height?: number }): Promise<Uint8Array>;
 /** A mark's coverage (alpha, 0–1) at `size` pixels wide, `currentColor` filled black. */
 export function coverage(svg: string, size: number): Promise<Float32Array>;

@@ -1,5 +1,5 @@
 import type { Tool } from '../index.js';
-import type { StyleId } from '@arraypress/brand-kit';
+import type { StyleId } from '@logomarks/brand-kit';
 
 /** What `brand_kit` and `social_pack` share: the brand, and the social pack's choices. */
 export interface BrandToolInput {

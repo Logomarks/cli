@@ -1,5 +1,5 @@
 import type { Mark } from '../brand/mark.js';
-import type { Brand } from '@arraypress/brand-kit';
+import type { Brand } from '@logomarks/brand-kit';
 import type { FontId } from '../brand/fonts.js';
 
 /** One object: its mockup function, its layouts (the first is the default), the option `base` sets, and its art. */

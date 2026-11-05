@@ -2,7 +2,7 @@
  * @module logomarks/cli/commands/kit
  *
  * `logomarks kit <slug|file.svg> --name "Brand" -o dir/`: the brand kit
- * (`@arraypress/brand-kit`) written to a folder.
+ * (`@logomarks/brand-kit`) written to a folder.
  */
 
 import path from 'node:path';

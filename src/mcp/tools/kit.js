@@ -1,7 +1,7 @@
 /**
  * @module logomarks/mcp/tools/kit
  *
- * `brand_kit`: the brand kit (`@arraypress/brand-kit`) written to a folder,
+ * `brand_kit`: the brand kit (`@logomarks/brand-kit`) written to a folder,
  * with its brand sheet to look at.
  */
 

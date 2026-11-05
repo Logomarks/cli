@@ -6,7 +6,7 @@
  * them). IBM Plex Mono sets the sheets' labels; the rest set a brand's name.
  * Each file is one face, named in its own family (`Inter SemiBold`), so an
  * SVG names the face by `family` and never needs a weight. `brandFont()`
- * hands one to `@arraypress/brand-kit` as bytes.
+ * hands one to `@logomarks/brand-kit` as bytes.
  */
 
 import fs from 'node:fs';
@@ -55,7 +55,7 @@ export function fontId(name) {
 const bytes = new Map();
 
 /**
- * A bundled face as `@arraypress/brand-kit` takes it: its name, its bytes (read once), its weight and tracking.
+ * A bundled face as `@logomarks/brand-kit` takes it: its name, its bytes (read once), its weight and tracking.
  *
  * @param {import('./fonts.js').FontId} [id] The face (inter).
  * @returns {import('./fonts.js').BrandFont} The font.

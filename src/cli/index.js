@@ -13,7 +13,7 @@ import { RECIPES } from '../cover/index.js';
 import { PRESETS } from '../edit/glitch.js';
 import { OPS } from '../edit/ops.js';
 import { COMBINE_OPS } from '../edit/combine.js';
-import { STYLE_IDS } from '@arraypress/brand-kit';
+import { STYLE_IDS } from '@logomarks/brand-kit';
 import { VERSION as version } from '../util/version.js';
 
 

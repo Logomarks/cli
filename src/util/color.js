@@ -3,7 +3,7 @@
  *
  * Reading a colour someone typed: `#rgb`, `#rrggbb` (the `#` optional), or
  * `black` and `white`. Everything else about colour is
- * `@arraypress/color-utils` and `@arraypress/brand-kit`'s palette.
+ * `@arraypress/color-utils` and `@logomarks/brand-kit`'s palette.
  */
 
 /**

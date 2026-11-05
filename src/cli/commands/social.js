@@ -2,7 +2,7 @@
  * @module logomarks/cli/commands/social
  *
  * `logomarks social <slug|file.svg> --name "Brand" -o dir/`: the social pack
- * (`@arraypress/brand-kit`): every platform image in each style, the email
+ * (`@logomarks/brand-kit`): every platform image in each style, the email
  * signature and the Open Graph card, written to a folder.
  */
 

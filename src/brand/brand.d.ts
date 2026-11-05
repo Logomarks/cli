@@ -1,4 +1,4 @@
-import type { BrandInput } from '@arraypress/brand-kit';
+import type { BrandInput } from '@logomarks/brand-kit';
 import type { Mark } from './mark.js';
 import type { FontId } from './fonts.js';
 
@@ -19,5 +19,5 @@ export interface BrandOptions {
 	handle?: string;
 }
 
-/** The brand as `@arraypress/brand-kit` takes it; a live mark is credited (CC0). */
+/** The brand as `@logomarks/brand-kit` takes it; a live mark is credited (CC0). */
 export function brandInput(o: BrandOptions): BrandInput;

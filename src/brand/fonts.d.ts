@@ -38,7 +38,7 @@ export function fontFiles(): URL[];
 /** A typeface by id or name, any case; null when it isn't bundled. */
 export function fontId(name: string): FontId | null;
 
-/** A bundled face as `@arraypress/brand-kit` takes it. */
+/** A bundled face as `@logomarks/brand-kit` takes it. */
 export interface BrandFont {
 	name: string;
 	/** The TrueType file's bytes. */
@@ -48,5 +48,5 @@ export interface BrandFont {
 	tracking: number;
 }
 
-/** A bundled face as `@arraypress/brand-kit` takes it: name, bytes (read once), weight and tracking. */
+/** A bundled face as `@logomarks/brand-kit` takes it: name, bytes (read once), weight and tracking. */
 export function brandFont(id?: FontId): BrandFont;

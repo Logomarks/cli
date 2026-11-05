@@ -2,7 +2,7 @@
 import { check, fix, similar, sheet, loadIndex, fitMark, FINDINGS, rules, type Report, type Finding, type Match, type Sheet } from '../src/index.js';
 import { main } from '../src/cli/index.js';
 import { loadMark, paint, markPng, kit, social, mockup, cover, FONTS, OBJECTS, RECIPES, glitchMark, editMark, markParts, combineMarks, type Mark, type Mockup, type Cover, type FontId, type Glitched, type EditResult, type Edited, type PartInfo } from '../src/index.js';
-import { palette, type Palette, type BrandKit } from '@arraypress/brand-kit';
+import { palette, type Palette, type BrandKit } from '@logomarks/brand-kit';
 
 declare const svg: string;
 const report: Report = check(svg, { name: 'hex-gem', ignore: ['speck'], strict: true });

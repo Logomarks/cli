@@ -76,7 +76,7 @@ export async function render(svg, { width, text = false, png = false } = {}) {
 }
 
 /**
- * An SVG drawn to a PNG: the rasteriser `@arraypress/brand-kit` is handed, so
+ * An SVG drawn to a PNG: the rasteriser `@logomarks/brand-kit` is handed, so
  * the kit needs no sharp. Its text is already outlines.
  *
  * @param {string} svg The SVG.

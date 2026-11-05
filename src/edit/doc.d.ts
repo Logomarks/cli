@@ -1,4 +1,4 @@
-import type { Doc } from '@arraypress/vector-editor';
+import type { Doc } from '@logomarks/vector-editor';
 import type { Report } from '../checks/index.js';
 
 /** One part of a mark, by index in drawing order. */

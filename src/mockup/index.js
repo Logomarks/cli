@@ -5,12 +5,12 @@
  * rasterised by resvg here). What goes on the object depends on it: a
  * garment, mug or bag carries the mark alone; anything printed edge to edge
  * (a card, a poster, a sleeve, a screen, a billboard) carries the brand in
- * one of `@arraypress/brand-kit`'s styles, drawn to its proportions. The hand layouts and the 3D scenes are
+ * one of `@logomarks/brand-kit`'s styles, drawn to its proportions. The hand layouts and the 3D scenes are
  * left out, and so is the bus shelter (one of its blurs stops resvg 2.6).
  */
 
 import * as mockups from '@logomarks/mockups';
-import { resolveBrand, artwork, markSvg, markTile } from '@arraypress/brand-kit';
+import { resolveBrand, artwork, markSvg, markTile } from '@logomarks/brand-kit';
 import { contrastRatio, readableText, WCAG } from '@arraypress/color-utils';
 import { brandInput } from '../brand/brand.js';
 import { parseColor } from '../util/color.js';
@@ -31,7 +31,7 @@ const hexOf = (base) => /** @type {Record<string, string>} */ (mockups.GARMENT_C
 /**
  * The colour a mark is printed in on an object: the brand's when it reads, else the brand's ink or paper.
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
  * @param {string | undefined} base The object's colour (a name from the mockups, or hex; white when unset).
  * @returns {string} The ink.
  */
@@ -44,19 +44,19 @@ function inkOn(b, base) {
 /**
  * The mark alone, printed in a colour.
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
  * @param {string} color The ink.
  * @returns {string} The SVG.
  */
 const print = (b, color) => markSvg(b.mark, color);
 
 /**
- * Branded artwork for a print, sized to it (`@arraypress/brand-kit`'s styles).
+ * Branded artwork for a print, sized to it (`@logomarks/brand-kit`'s styles).
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
  * @param {number} width Pixels.
  * @param {number} height Pixels.
- * @param {Partial<import('@arraypress/brand-kit').ArtworkOptions>} [o] The style (bold) and the kind (by shape; `logo`: the mark alone).
+ * @param {Partial<import('@logomarks/brand-kit').ArtworkOptions>} [o] The style (bold) and the kind (by shape; `logo`: the mark alone).
  * @returns {Promise<string>} The SVG.
  */
 const art = (b, width, height, o = {}) => artwork(b, { width, height, ...o });
@@ -64,8 +64,8 @@ const art = (b, width, height, o = {}) => artwork(b, { width, height, ...o });
 /**
  * The lockup in the brand's colours for paper, with no clear space.
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
- * @returns {import('@arraypress/brand-kit').Lockup} The lockup.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
+ * @returns {import('@logomarks/brand-kit').Lockup} The lockup.
  */
 const paperLockup = (b) => {
 	const g = b.grounds['on-light'];
@@ -75,7 +75,7 @@ const paperLockup = (b) => {
 /**
  * An A4 letter: the lockup top left, a band of the brand colour at the foot.
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
  * @returns {string} The SVG, 1240 × 1754.
  */
 function letter(b) {
@@ -87,7 +87,7 @@ function letter(b) {
 /**
  * A landing page: a bar with the lockup, then the brand colour with the lockup large.
  *
- * @param {import('@arraypress/brand-kit').Brand} b The brand.
+ * @param {import('@logomarks/brand-kit').Brand} b The brand.
  * @returns {Promise<string>} The SVG, 1440 × 900.
  */
 async function page(b) {

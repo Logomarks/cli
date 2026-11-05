@@ -5,7 +5,7 @@
  * (`check`, `fix`), the nearest live marks (`similar`), and review cards to
  * look at (`sheet`); searching the live set (`findMarks`). Then build a brand on one: the mark itself (`loadMark`,
  * `paint`, `markPng`), edits (`glitchMark`, `editMark`, `combineMarks`), the
- * brand kit and social pack (`kit`, `social`, from `@arraypress/brand-kit`),
+ * brand kit and social pack (`kit`, `social`, from `@logomarks/brand-kit`),
  * mockups (`mockup`) and covers (`cover`). The same functions run the `logomarks` command and its MCP
  * server (`logomarks/mcp`).
  */

@@ -10,8 +10,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
-import { fitMark } from '@arraypress/marks-kit/fit';
-import { PLATFORMS, STYLE_IDS } from '@arraypress/brand-kit';
+import { fitMark } from '@logomarks/marks-kit/fit';
+import { PLATFORMS, STYLE_IDS } from '@logomarks/brand-kit';
 import { loadMark } from '../brand/mark.js';
 import { parseColor } from '../util/color.js';
 import { FONTS } from '../brand/fonts.js';
@@ -36,7 +36,7 @@ export const schema = {
 	url: z.string().optional().describe("The brand's website, for the brand sheet and the email signature."),
 	handle: z.string().optional().describe('The social handle, e.g. "@hexalabs". Defaults to @ and the name.'),
 	platforms: z.array(z.string()).optional().describe(`Social images by id or platform name (default every one): ${Object.keys(PLATFORMS).join(', ')}; or ${[...new Set(Object.values(PLATFORMS).map((p) => p.platform))].join(', ')}.`),
-	styles: z.array(z.enum(/** @type {[import('@arraypress/brand-kit').StyleId, ...import('@arraypress/brand-kit').StyleId[]]} */ ([...STYLE_IDS]))).optional().describe('minimal (the logo on paper), bold (the brand colour edge to edge, the mark cropped large), pattern (the mark repeated). Default all three.'),
+	styles: z.array(z.enum(/** @type {[import('@logomarks/brand-kit').StyleId, ...import('@logomarks/brand-kit').StyleId[]]} */ ([...STYLE_IDS]))).optional().describe('minimal (the logo on paper), bold (the brand colour edge to edge, the mark cropped large), pattern (the mark repeated). Default all three.'),
 	animated: z.boolean().optional().describe('Also write animated SVGs for avatars, stories and banners. Default false.'),
 };
 

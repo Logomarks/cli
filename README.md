@@ -38,7 +38,7 @@ Tools: `find_marks`, `get_mark`, `check_mark`, `similar_marks`, `review_sheet`, 
 - [MCP tools](docs/mcp.md): each tool's arguments and what it returns.
 - [API](docs/api.md): the library behind them.
 
-Built on [`@arraypress/marks-kit`](https://github.com/Logomarks/core) (the measures), [`@arraypress/vector-editor`](https://github.com/Logomarks/editor) (the edits), [`@arraypress/brand-kit`](https://github.com/Logomarks/brand-kit) (the kit and social pack), [`@logomarks/mockups`](https://github.com/Logomarks/mockups) and [`@arraypress/covers`](https://github.com/arraypress/covers). The marks are CC0; the bundled typefaces are SIL OFL. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
+Built on [`@logomarks/core`](https://github.com/Logomarks/core) (the measures), [`@logomarks/vector-editor`](https://github.com/Logomarks/vector-editor) (the edits), [`@logomarks/brand-kit`](https://github.com/Logomarks/brand-kit) (the kit and social pack), [`@logomarks/mockups`](https://github.com/Logomarks/mockups) and [`@arraypress/covers`](https://github.com/arraypress/covers). The marks are CC0; the bundled typefaces are SIL OFL. The full brand kit, photoreal mockups, custom logos and exclusive wordmarks are on [logomarks.ai](https://logomarks.ai/pricing).
 
 ## Licence
 

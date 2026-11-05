@@ -7,7 +7,7 @@
  */
 
 import { renderSvg, resolvePalette } from '@arraypress/covers';
-import { palette as makePalette, DEFAULT_COLOR } from '@arraypress/brand-kit';
+import { palette as makePalette, DEFAULT_COLOR } from '@logomarks/brand-kit';
 import { render } from '../raster/render.js';
 
 /** The mark laid over a recipe that has no icon of its own: centred, or top left when there's a title. */

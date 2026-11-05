@@ -40,7 +40,7 @@ test('the social pack inside it, and the sheet', () => {
 	assert.ok(png('brand-sheet.png').height > 2000);
 });
 
-// The palette is @arraypress/brand-kit's (color-utils' OKLCH scale), so its hex values differ slightly from the CLI's 0.1 kit.
+// The palette is @logomarks/brand-kit's (color-utils' OKLCH scale), so its hex values differ slightly from the CLI's 0.1 kit.
 test('brand.json: the colours, the font, the mark’s credit', () => {
 	const b = JSON.parse(String(file('brand.json')));
 	assert.equal(b.name, 'Hexa Labs');

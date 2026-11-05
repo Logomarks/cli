@@ -1,12 +1,12 @@
 /**
  * @module logomarks/mcp/tools/social
  *
- * `social_pack`: every platform image in each style (`@arraypress/brand-kit`),
+ * `social_pack`: every platform image in each style (`@logomarks/brand-kit`),
  * written to a folder, with one image per style to look at.
  */
 
 import path from 'node:path';
-import { pngSize } from '@arraypress/brand-kit';
+import { pngSize } from '@logomarks/brand-kit';
 import { social } from '../../kit/index.js';
 import { slugify } from '../../brand/mark.js';
 import { writeFiles } from '../../util/files.js';
