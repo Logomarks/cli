@@ -9,38 +9,16 @@
  */
 
 import { GAPS, MIN_FEATURE, WIDTH_SCALE, WIDTH_PRECISION, CHIPS } from '../rules.js';
-import { rings } from '../svg/rings.js';
-import { frameOf, fill } from '../raster/scanline.js';
-import { channels } from '../raster/channels.js';
+import { widths } from '@arraypress/marks-kit/analyse';
 import { finding } from './finding.js';
 
 /** Pixels a unit at the smallest chip that must still read (32 px). */
 const AT_32 = CHIPS[0] / 512;
 
 /**
- * Runs grouped by width: runs within `GAPS.same` of each other are one group.
- *
- * @param {readonly import('../raster/channels.js').Channel[]} runs The runs, narrowest first.
- * @returns {import('./widths.js').RunGroup[]} The groups, each with its mean width, total length and box.
- */
-function groups(runs) {
-	/** @type {import('./widths.js').RunGroup[]} */
-	const out = [];
-	for (const c of runs) {
-		const g = out.find((x) => Math.abs(x.width - c.width) <= GAPS.same);
-		if (!g) { out.push({ width: c.width, length: c.length, count: 1, box: [...c.box] }); continue; }
-		g.width = (g.width * g.length + c.width * c.length) / (g.length + c.length);
-		g.length += c.length;
-		g.count++;
-		g.box = [Math.min(g.box[0], c.box[0]), Math.min(g.box[1], c.box[1]), Math.max(g.box[2], c.box[2]), Math.max(g.box[3], c.box[3])];
-	}
-	return out;
-}
-
-/**
  * How a group reads in a message: "3 gaps 9.8 wide".
  *
- * @param {import('./widths.js').RunGroup} g The group.
+ * @param {import('@arraypress/marks-kit/analyse').RunGroup} g The group.
  * @param {string} noun What it is.
  * @returns {string} The words.
  */
@@ -49,15 +27,13 @@ const describe = (g, noun) => `${g.count > 1 ? `${g.count} ${noun}s` : `A ${noun
 /**
  * Width findings for one mark: thin strokes, narrow gaps, uneven gaps.
  *
- * @param {readonly import('../svg/shapes.js').Shape[]} paths The mark's shapes.
+ * @param {readonly import('@arraypress/marks-kit/svg').FilledPath[]} paths The mark's shapes.
  * @returns {import('./finding.js').Finding[]} What was found.
  */
 export function widthFindings(paths) {
-	const fp = paths.map((s) => ({ rings: rings(s.segs, 0.5), evenodd: s.evenodd }));
-	const bm = fill(fp, frameOf(fp, WIDTH_SCALE, 4));
-	const gaps = groups(channels(bm, 0, GAPS)), strokes = groups(channels(bm, 1, GAPS));
+	const { gaps, strokes } = widths(paths, { ...GAPS, scale: WIDTH_SCALE, pad: 4 });
 	const out = [];
-	const under = (/** @type {import('./widths.js').RunGroup} */ g) => g.width < MIN_FEATURE - WIDTH_PRECISION;
+	const under = (/** @type {import('@arraypress/marks-kit/analyse').RunGroup} */ g) => g.width < MIN_FEATURE - WIDTH_PRECISION;
 	for (const g of strokes.filter(under)) {
 		out.push(finding('thin', `${describe(g, 'stroke')}: under ${MIN_FEATURE}, it fades at 32 px (${(g.width * AT_32).toFixed(2)} px).`, { box: g.box, value: g.width }));
 	}

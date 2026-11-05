@@ -15,7 +15,7 @@ export { similar } from './similar/nearest.js';
 export { loadIndex } from './similar/store.js';
 export { findMarks, facets } from './find/index.js';
 export { sheet } from './sheet/index.js';
-export { fitMark } from './svg/fit.js';
+export { fitMark } from '@arraypress/marks-kit/fit';
 export * as rules from './rules.js';
 export { loadMark, findMark, paint, markPng, MarkNotFound } from './brand/mark.js';
 export { palette, parseColor, contrast } from './brand/color.js';

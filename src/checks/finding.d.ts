@@ -1,4 +1,4 @@
-import type { Box, Point } from '../geometry/polygon.js';
+import type { Box, Point } from '@arraypress/marks-kit/geometry';
 
 /** How much a finding matters: errors fail the check; warnings fail it with `--strict`; notes never do. */
 export type Severity = 'error' | 'warning' | 'info';

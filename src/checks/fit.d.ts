@@ -1,6 +1,5 @@
-import type { Bounds } from '../svg/outline.js';
-import type { Shape } from '../svg/shapes.js';
+import type { Bounds, FilledPath } from '@arraypress/marks-kit/svg';
 import type { Finding } from './finding.js';
 
 /** The standard's findings: viewBox, size, centre, clipping, markup, fill colour and precision. */
-export function fitFindings(svg: string, b: Bounds, paths: readonly Shape[]): Finding[];
+export function fitFindings(svg: string, b: Bounds, paths: readonly FilledPath[]): Finding[];
