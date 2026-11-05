@@ -71,7 +71,7 @@
   "dependencies": {
     "@arraypress/covers": "^1.1.0",
     "@arraypress/search": "^0.1.0",
-    "@logomarks/core": "^0.1.2",
+    "@logomarks/core": "^0.1.3",
     "@logomarks/mockups": "^0.4.3",
     "@modelcontextprotocol/sdk": "1.32.1",
     "@resvg/resvg-wasm": "2.6.2",
