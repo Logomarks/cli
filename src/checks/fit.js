@@ -8,7 +8,7 @@
  */
 
 import { CANVAS, FIT, CENTRE, FIT_TOLERANCE, DECIMALS, FORBIDDEN_MARKUP } from '../rules.js';
-import { viewBox, attr } from '../svg/shapes.js';
+import { viewBox, attr } from '@logomarks/core/svg';
 import { finding } from './finding.js';
 
 const f1 = (/** @type {number} */ v) => v.toFixed(1);
@@ -17,14 +17,14 @@ const f1 = (/** @type {number} */ v) => v.toFixed(1);
  * Fit findings for one mark.
  *
  * @param {string} svg The file's text.
- * @param {import('../svg/outline.js').Bounds} b Its real outline's box.
- * @param {readonly import('../svg/shapes.js').Shape[]} paths Its shapes.
+ * @param {import('@logomarks/core/svg').Bounds} b Its real outline's box.
+ * @param {readonly import('@logomarks/core/svg').FilledPath[]} paths Its shapes.
  * @returns {import('./finding.js').Finding[]} What is off.
  */
 export function fitFindings(svg, b, paths) {
 	const out = [];
 	const vb = viewBox(svg);
-	const box = /** @type {import('../geometry/polygon.js').Box} */ ([b.x, b.y, b.x + b.w, b.y + b.h]);
+	const box = /** @type {import('@logomarks/core/geometry').Box} */ ([b.x, b.y, b.x + b.w, b.y + b.h]);
 	if (!vb || vb.join(' ') !== `0 0 ${CANVAS} ${CANVAS}`) out.push(finding('viewbox', `The viewBox is "${vb?.join(' ') ?? 'missing'}", not "0 0 ${CANVAS} ${CANVAS}".`));
 	const long = Math.max(b.w, b.h);
 	if (Math.abs(long - FIT) > FIT_TOLERANCE) out.push(finding('size', `The longest side is ${f1(long)}, not ${FIT}.`, { box, value: long }));

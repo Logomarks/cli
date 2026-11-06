@@ -35,8 +35,8 @@ export const FINDINGS = {
  * @param {import('./finding.js').FindingId} id What was found.
  * @param {string} message A plain-English sentence.
  * @param {object} [o] Where and how much.
- * @param {import('../geometry/polygon.js').Box} [o.box] Where, as a box on the canvas.
- * @param {import('../geometry/polygon.js').Point} [o.point] Where, as a point.
+ * @param {import('@logomarks/core/geometry').Box} [o.box] Where, as a box on the canvas.
+ * @param {import('@logomarks/core/geometry').Point} [o.point] Where, as a point.
  * @param {number} [o.value] The measured number (an area, a width).
  * @param {import('./finding.js').Severity} [o.severity] Overrides the usual severity.
  * @returns {import('./finding.js').Finding} The finding.
@@ -48,8 +48,8 @@ export function finding(id, message, { box, point, value, severity } = {}) {
 		id,
 		severity: severity ?? kind.severity,
 		message,
-		...(box && { box: /** @type {import('../geometry/polygon.js').Box} */ (box.map(r)) }),
-		...(point && { point: /** @type {import('../geometry/polygon.js').Point} */ (point.map(r)) }),
+		...(box && { box: /** @type {import('@logomarks/core/geometry').Box} */ (box.map(r)) }),
+		...(point && { point: /** @type {import('@logomarks/core/geometry').Point} */ (point.map(r)) }),
 		...(value !== undefined && { value: r(value) }),
 		fixable: kind.fixable,
 		fix: kind.fix,

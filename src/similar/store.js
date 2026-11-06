@@ -4,7 +4,8 @@
  * The bundled index of live marks: each mark's slug, name and SVG, what it is
  * (tags, collection, style, mood, letter, description, industries: what
  * `findMarks` searches), its 48 px coverage (the outline signature before its
- * blur), and for badges and letter marks a letter signature. One brotli-compressed file, built by
+ * blur), and for badges and letter marks a letter signature, and the board's search over them (a packed
+ * @arraypress/search index: `findMarks`). One brotli-compressed file, built by
  * `npm run index` from the Logomarks data, so `similar` and `sheet` work
  * offline. Layout: a 4-byte JSON length, the JSON (marks and letters), then
  * the signature bytes.
@@ -19,7 +20,7 @@ import { blur } from './signature.js';
 export const INDEX_FILE = new URL('../../data/index.bin', import.meta.url);
 
 /** The file format's version. */
-const VERSION = 2;
+const VERSION = 3;
 
 /** Letter signatures are quarters (2×2 supersampling): stored ×4. */
 const QUARTERS = 4;
@@ -34,7 +35,7 @@ const cache = new Map();
  * @param {string | URL} [file] Where (the bundled index).
  * @returns {number} The file's size in bytes.
  */
-export function writeIndex({ marks, coverages, letters }, file = INDEX_FILE) {
+export function writeIndex({ marks, coverages, letters, search }, file = INDEX_FILE) {
 	const head = Buffer.from(JSON.stringify({
 		version: VERSION,
 		built: new Date().toISOString().slice(0, 10),
@@ -42,6 +43,7 @@ export function writeIndex({ marks, coverages, letters }, file = INDEX_FILE) {
 		letterSize: LETTERS.size,
 		marks: marks.map(({ slug, name, svg, ...about }) => [slug, name, svg, about]),
 		letters: letters.map((l) => [l.mark, l.kind]),
+		search,
 	}));
 	const length = Buffer.alloc(4);
 	length.writeUInt32LE(head.length);
@@ -79,6 +81,7 @@ export function loadIndex(file = INDEX_FILE) {
 		built: raw.built,
 		marks: raw.marks.map((/** @type {[string, string, string, import('./store.js').MarkAbout]} */ [slug, name, svg, about]) => ({ slug, name, svg, ...about, outline: blur(take(S, 255), raw.size) })),
 		letters: raw.letters.map((/** @type {[number, 'hole' | 'ink']} */ [mark, kind]) => ({ mark, kind, sig: take(L, QUARTERS) })),
+		search: raw.search,
 	};
 	cache.set(key, index);
 	return index;

@@ -104,11 +104,14 @@ test('mockup and cover write PNGs; bad choices exit 2', async () => {
 test('find: words and filters, facets with nothing to search by, 1 when nothing matches', async () => {
 	const r = await run(['find', 'fox', '--top', '2', '--json']);
 	assert.equal(r.code, 0);
-	assert.equal(JSON.parse(r.out).marks[0].slug, 'fox');
-	assert.equal(JSON.parse(r.out).marks.length, 2);
+	// as on the board: every Fox, in the board's order (Track Fox Tail first since Drop 17)
+	assert.deepEqual(JSON.parse(r.out).marks.map((/** @type {{ slug: string }} */ m) => m.slug), ['track-fox-tail', 'crease-fox-sit']);
+	assert.equal(JSON.parse(r.out).total, 12);
+	// a trade by another name: the synonyms find the lawyers' scales
+	assert.equal(JSON.parse((await run(['find', 'solicitor', '--top', '1', '--json'])).out).marks[0].slug, 'pixel-scales');
 	const k = JSON.parse((await run(['find', '--style', 'badge', '--letter', 'K', '--json'])).out);
-	// every K badge, in any lettering: Badge K, Pixel Badge K, Pixel Coin K, Pixel Badge Lower K …
-	assert.ok(k.marks.length > 0 && k.marks.every((/** @type {{ slug: string }} */ m) => /(badge|coin)(-lower)?-k$/.test(m.slug)));
+	// every K badge, in any lettering: Badge K, Pixel Badge K, Pixel Coin K, Pixel Badge Lower K, League K …
+	assert.ok(k.marks.length > 0 && k.marks.every((/** @type {{ slug: string }} */ m) => /(badge|coin|league)(-lower)?-k$/.test(m.slug)));
 	assert.ok(JSON.parse((await run(['find', '--json'])).out).styles.letter > 0);
 	assert.equal((await run(['find', 'zzqx'])).code, 1);
 });

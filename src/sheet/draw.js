@@ -5,7 +5,7 @@
  * in a box, a raster chip.
  */
 
-import { body, viewBox } from '../svg/shapes.js';
+import { body, viewBox } from '@logomarks/core/svg';
 import { COLORS, FONT } from './theme.js';
 
 /**

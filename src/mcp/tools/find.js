@@ -14,7 +14,7 @@ export const tool = {
 	title: 'Find live Logomarks',
 	description: [
 		'Search the free Logomarks set (1,500+ geometric logomarks, CC0, bundled offline) for marks to use or build on.',
-		'Words are matched against each mark\'s slug, name, style, tags, mood, letter, industries and description; marks matching the most words come first.',
+		'Search works as on logomarks.ai: every word must be found in a mark (its name, search words, industries, style, tags, mood, letter or description), trades by their UK and US names too ("solicitor" finds the lawyers\' marks); the best fits come first. Filler words (a, for, logo) are ignored.',
 		'Filters narrow it exactly. Call with no arguments to list every style, tag, mood and industry with its count.',
 		'Returns slugs to pass to get_mark, brand_kit, mockup or cover; each has a description and its page on logomarks.ai.',
 	].join(' '),

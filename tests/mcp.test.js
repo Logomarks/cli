@@ -52,7 +52,7 @@ test('lists every tool, each with a description and an input schema', async () =
 
 test('find_marks: words and filters; no arguments lists the facets', async () => {
 	const fox = await call('find_marks', { query: 'fox', limit: 3 });
-	assert.equal(fox.json.marks[0].slug, 'fox');
+	assert.ok(fox.json.marks.every((/** @type {{ name: string }} */ m) => / Fox\b|^Fox\b/.test(m.name)));
 	assert.equal(fox.json.marks.length, 3);
 	assert.ok(fox.json.total >= 3);
 	const k = await call('find_marks', { style: 'badge', letter: 'k' });
@@ -63,10 +63,15 @@ test('find_marks: words and filters; no arguments lists the facets', async () =>
 	assert.equal((await call('find_marks', { query: 'zzqx' })).json.total, 0);
 });
 
-test('findMarks ranks marks with the most words first and drops filler words', () => {
+test('findMarks searches as the board does: synonyms, phrases, plurals, filler words left out', () => {
 	const r = findMarks('a logo for a fox', { limit: 1 });
-	assert.equal(r.marks[0].slug, 'fox');
+	assert.equal(r.marks[0].slug, 'track-fox-tail');
 	assert.equal(r.total, findMarks('fox').total);
+	// UK and US trades, a two-word phrase and its plural
+	assert.deepEqual(findMarks('solicitor').marks.map((m) => m.slug), findMarks('attorney').marks.map((m) => m.slug));
+	assert.deepEqual(findMarks('estate agents', { limit: 3 }).marks.map((m) => m.slug), ['iso-duplex', 'iso-stair-door', 'iso-storeys']);
+	// every word must be found
+	assert.equal(findMarks('fox zzqx').total, 0);
 });
 
 test('get_mark: the SVG, a PNG when sized, and a file when asked', async () => {
