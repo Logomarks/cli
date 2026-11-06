@@ -1,6 +1,6 @@
 {
   "name": "logomarks",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Find, check, edit and build on free geometric logomarks from the command line or an AI agent: search the CC0 Logomarks set, check marks against its house rules, edit and glitch them, and build a brand kit, social pack, mockups and covers. Includes an MCP server.",
   "keywords": [
     "logo",
@@ -25,8 +25,12 @@
     "cc0"
   ],
   "homepage": "https://logomarks.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Logomarks/cli.git"
+  },
   "bugs": {
-    "url": "https://github.com/Logomarks/skills/issues"
+    "url": "https://github.com/Logomarks/cli/issues"
   },
   "license": "MIT",
   "author": {
