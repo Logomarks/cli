@@ -146,9 +146,9 @@ test('find: words and filters, facets with nothing to search by, 1 when nothing 
 	assert.equal(r.code, 0);
 	// as on the board: every Fox, in the board's order (Track Fox Tail first since Drop 17)
 	assert.deepEqual(JSON.parse(r.out).marks.map((/** @type {{ slug: string }} */ m) => m.slug), ['track-fox-tail', 'crease-fox-sit']);
-	assert.equal(JSON.parse(r.out).total, 12);
-	// a trade by another name: the synonyms find the lawyers' scales
-	assert.equal(JSON.parse((await run(['find', 'solicitor', '--top', '1', '--json'])).out).marks[0].slug, 'pixel-scales');
+	assert.equal(JSON.parse(r.out).total, 13); // Drop 19 added Fox Sit
+	// a trade by another name: the synonyms find the law firms' marks (Drop 19's Ionic Column, then the scales)
+	assert.deepEqual(JSON.parse((await run(['find', 'solicitor', '--top', '2', '--json'])).out).marks.map((/** @type {{ slug: string }} */ m) => m.slug), ['ionic-column', 'pixel-scales']);
 	const k = JSON.parse((await run(['find', '--style', 'badge', '--letter', 'K', '--json'])).out);
 	// every K badge, in any lettering: Badge K, Pixel Badge K, Pixel Coin K, Pixel Badge Lower K, League K …
 	assert.ok(k.marks.length > 0 && k.marks.every((/** @type {{ slug: string }} */ m) => /(badge|coin|league)(-lower)?-k$/.test(m.slug)));

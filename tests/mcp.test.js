@@ -128,7 +128,8 @@ test('findMarks searches as the board does: synonyms, phrases, plurals, filler w
 	assert.equal(r.total, findMarks('fox').total);
 	// UK and US trades, a two-word phrase and its plural
 	assert.deepEqual(findMarks('solicitor').marks.map((m) => m.slug), findMarks('attorney').marks.map((m) => m.slug));
-	assert.deepEqual(findMarks('estate agents', { limit: 3 }).marks.map((m) => m.slug), ['iso-duplex', 'iso-stair-door', 'iso-storeys']);
+	// Drop 19's Umbrella House (insurance, real estate, mortgage brokers) leads since Drop 19
+	assert.deepEqual(findMarks('estate agents', { limit: 3 }).marks.map((m) => m.slug), ['umbrella-house', 'iso-duplex', 'iso-stair-door']);
 	// every word must be found
 	assert.equal(findMarks('fox zzqx').total, 0);
 });
