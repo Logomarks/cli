@@ -13,6 +13,21 @@ import { style } from '../style.js';
 /** What `get` takes. */
 export const spec = { flags: ['json'], options: { out: 'o', color: '', size: '', format: '' } };
 
+/** `logomarks get --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: "Get a live mark's SVG, or a PNG of any mark.",
+	usage: ['<mark> [-o file] [options]'],
+	about: ['Live marks are CC0. Without -o the SVG goes to stdout.'],
+	options: [
+		['--color <hex>', 'Paint it, e.g. #ff5c3a.\nDefault: currentColor (SVG) or black (PNG).'],
+		['--size <px>', 'A PNG this many pixels square (16–4096). Default 512.'],
+		['--format <svg | png>', 'Default: from -o, or png when --size is given.'],
+		['-o, --out <file>', 'Write .svg or .png. A PNG needs -o.'],
+	],
+	examples: ['logomarks get hex-gem -o logo.svg', "logomarks get \"Hex Gem\" --color '#ff5c3a' --size 512 -o logo.png"],
+};
+
 /** A PNG's side when none is given. */
 const PNG_SIZE = 512;
 

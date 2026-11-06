@@ -76,22 +76,14 @@ export async function render(svg, { width, text = false, png = false } = {}) {
 }
 
 /**
- * An SVG with its text set as outlines (resvg's own tree, written back out),
- * and the box round what it draws.
+ * An SVG drawn to a PNG: the rasteriser `@logomarks/brand-kit` is handed, so
+ * the kit needs no sharp. Its text is already outlines.
  *
- * @param {string} svg The SVG, with `<text>` in the bundled typefaces.
- * @returns {Promise<import('./render.js').Outlined>} The outlined SVG and its box (null when it draws nothing).
+ * @param {string} svg The SVG.
+ * @param {{ width: number }} size The PNG's width (the height follows the SVG's own shape).
+ * @returns {Promise<Uint8Array>} The PNG.
  */
-export async function outline(svg) {
-	await initRenderer();
-	const r = new Resvg(svg, { font: fontOptions(true) });
-	const out = r.toString();
-	const b = r.getBBox();
-	const box = b ? { x: b.x, y: b.y, w: b.width, h: b.height } : null;
-	b?.free();
-	r.free();
-	return { svg: out, box };
-}
+export const rasterize = async (svg, { width }) => /** @type {Uint8Array} */ ((await render(svg, { width, png: true })).png);
 
 /**
  * A mark's alpha channel at a size, filled black (as the tools do: `currentColor` → `#000`).

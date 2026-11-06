@@ -13,6 +13,26 @@ import { style, pad } from '../style.js';
 /** What `find` takes. */
 export const spec = { flags: ['json'], options: { style: '', tag: '', industry: '', letter: '', top: '' } };
 
+/** `logomarks find --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Search the live set by words, style, tag, industry or letter.',
+	usage: ['<words…> [options]', '[options]'],
+	about: [
+		'Searches as logomarks.ai does: every word must match (synonyms, plurals and trade names',
+		'included) and the best fits come first. With no words or filters it lists every style,',
+		'tag, mood and industry. Exit 1 when nothing matches.',
+	],
+	options: [
+		['--style <style>', 'One style, e.g. letter, badge, iso, line, grid, glitch, animal.'],
+		['--tag <tags>', 'Tags a mark must all have, e.g. round,symmetric.'],
+		['--industry <id>', 'An industry it suits, e.g. coffee, fintech, law-firm.'],
+		['--letter <char>', 'The letter or number a lettermark shows.'],
+		['--top <n>', 'How many marks to list (1–500). Default 20.'],
+	],
+	examples: ['logomarks find coffee', 'logomarks find calm hexagon --top 5', 'logomarks find --style letter --letter K', 'logomarks find'],
+};
+
 /**
  * Runs `find`.
  *

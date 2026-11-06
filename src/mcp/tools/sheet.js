@@ -15,7 +15,7 @@ export const tool = {
 	name: 'review_sheet',
 	title: 'Review sheet',
 	description: [
-		'Render review cards for one or more marks as a PNG, and return it to look at.',
+		'Draw review cards for one or more marks as a PNG and return it to look at; use it as the last look before handing marks over.',
 		'Each card: the mark large on dark and light with its findings boxed and numbered, at 32 and 16 px, and beside its three nearest live marks (amber: too close, compare by eye; red: a near-copy, cut it).',
 		'Look at every card before handing marks over: the same trick as an existing mark is cut even when it scores low.',
 		'Also returns each mark\'s check summary and nearest marks as JSON.',
@@ -26,9 +26,9 @@ export const tool = {
 		paths: schema.paths,
 		strict: schema.strict,
 		ignore: schema.ignore,
-		out: z.string().optional().describe('Also write the PNG here (relative to the working folder).'),
+		out: z.string().optional().describe('Also write the PNG here. Relative to the working folder; an existing file is replaced.'),
 	},
-	annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+	annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
 	async run({ svg, svgName, paths, strict = false, ignore = [], out }, { cwd }) {
 		const s = await sheet(readSvgs({ svg, svgName, paths }, cwd), { strict, ignore });
 		const file = out && resolvePath(cwd, out);

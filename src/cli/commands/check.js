@@ -8,30 +8,29 @@
 import fs from 'node:fs';
 import { check, fix } from '../../checks/index.js';
 import { svgFiles, slugOf } from '../files.js';
-import { style, pad } from '../style.js';
+import { style } from '../style.js';
+import { reportLines as lines } from '../report.js';
 
 /** What `check` takes. */
 export const spec = { flags: ['json', 'fix', 'strict'], options: { ignore: '' } };
 
-/** Severity labels for the readable output. */
-const LABEL = { error: style.red('error  '), warning: style.yellow('warning'), info: style.dim('note   ') };
-
-/**
- * A report as readable lines.
- *
- * @param {string} file The file.
- * @param {import('../../checks/index.js').Report} r Its report.
- * @param {boolean} fixed Whether it was refitted.
- * @returns {string} The lines.
- */
-function lines(file, r, fixed) {
-	const sym = !r.ok ? style.red('✗') : r.warnings ? style.yellow('!') : style.green('✓');
-	const counts = [r.errors && `${r.errors} error${r.errors > 1 ? 's' : ''}`, r.warnings && `${r.warnings} warning${r.warnings > 1 ? 's' : ''}`].filter(Boolean).join(', ');
-	const size = r.size ? `${r.size.w} × ${r.size.h}` : 'empty';
-	const head = `${sym} ${style.bold(file)}  ${style.dim(size)}${counts ? `  ${counts}` : ''}${fixed ? style.green('  refitted') : ''}`;
-	const body = r.findings.map((f) => `    ${LABEL[f.severity]}  ${pad(f.id, 12)} ${f.message}${f.box ? style.dim(`  [${f.box.join(', ')}]`) : f.point ? style.dim(`  (${f.point.join(', ')})`) : ''}`);
-	return [head, ...body].join('\n');
-}
+/** `logomarks check --help`. */
+/** @type {import('../help.js').CommandHelp} */
+export const help = {
+	summary: 'Check SVG marks against the house rules.',
+	usage: ['<file.svg | folder>… [options]'],
+	about: [
+		'Measures the fit (512 canvas, longest side 448, centred), the markup, specks, slivers,',
+		'pin-holes, clipping, gap widths and features too small for 32 px. Each finding has an id,',
+		'a severity and a box. Exit 0 when every mark passes, 1 when any fails.',
+	],
+	options: [
+		['--fix', 'Refit to the grid in place (the only automatic fix).'],
+		['--strict', 'Count warnings as failures too.'],
+		['--ignore <ids>', 'Leave these finding ids out, e.g. speck,uneven-gaps.'],
+	],
+	examples: ['logomarks check mark.svg', 'logomarks check marks/ --fix', 'logomarks check out/*.svg --strict --json'],
+};
 
 /**
  * Runs `check`.

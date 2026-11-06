@@ -24,16 +24,32 @@ Once a mark is chosen (a live slug, found with `npx logomarks find calm hexagon`
 
 ```bash
 npx logomarks get hex-gem -o mark.svg                         # the file (CC0); --color '#hex', --size 512 -o mark.png
-npx logomarks kit hex-gem --name "Brand" --color '#hex' --font space-grotesk -o brand/
+npx logomarks kit hex-gem --name "Brand" --color '#hex' --font space-grotesk --tagline "…" -o brand/
+npx logomarks social hex-gem --name "Brand" --color '#hex' --platforms instagram,linkedin --styles bold
 npx logomarks mockup hex-gem --name "Brand" --color '#hex' --object tee -o tee.png
 npx logomarks cover hex-gem --recipe aurora --title "Launch" --color '#hex' -o cover.png
 ```
 
-- `kit` writes the mark (SVG, PNG 16–1024, on light and dark), favicons (`.ico`, `apple-touch-icon.png`, manifest; the
-  `<head>` lines are in `brand.json` → `head`), lockups, `colors/palette.css`, social images and `brand.json`. Open
-  `brand-sheet.png` and look at it before handing the kit over: a light brand colour gets a darker mark on light grounds
-  (it must clear 3:1), and its text colours clear AA.
+- `kit` writes the mark (SVG on light, dark and colour; PNG 64–2048), favicons (`.ico`, `apple-touch-icon.png`, maskable
+  icons, manifest, `head.html` with the `<head>` lines), lockups, `colors/` (CSS, Tailwind, tokens), the social pack,
+  `brand.json` and `README.md`. Open `brand-sheet.png` and look at it before handing the kit over: a light brand colour
+  gets a darker mark on light grounds (it must clear 3:1), and its text colours clear AA.
+- `social` writes every platform's images at its current size, in `minimal`, `bold` and `pattern` (`--styles` adds `gradient`; `--animated` too).
 - Fonts: `inter`, `space-grotesk`, `instrument-sans`, `bricolage-grotesque`, `instrument-serif`, `plex-mono` (all OFL); for restaurants, `fraunces` (warm serif: bistro, wine bar), `cagliostro` (flared sans, set wide: fine dining), `limelight` (art deco: cocktail bar), `shrikhand` (retro chunky: diner, brunch, ice cream).
 - `mockup --object`: card, letterhead, ticket, lanyard, sticker, tote, tee, hoodie, cap, mug, bag, box, poster, vinyl,
   cd, cassette, phone, laptop, billboard, shopfront. `--base black` changes a garment's or mug's colour.
 - `cover --recipe`: mark, gradient, tile, stripes, aurora, grid, cutout. `--aspect og` (default), `1:1`, `16:9`.
+
+## Make a mark your own
+
+Edit a live mark (or yours) with the editor's own operations; each result comes back fitted and checked:
+
+```bash
+npx logomarks parts quad-cove -o parts.png                    # the parts by index: what --ops names
+npx logomarks edit quad-cove --ops '[{"op":"delete","parts":[3]},{"op":"round","radius":18}]' -o mine.svg
+npx logomarks glitch quad-cove --preset shear --seed 3 -o mine.svg   # shear, slice, bands, stepped, lane
+npx logomarks combine quad-cove shear-a --op subtract --scale 0.5 -o mine.svg
+```
+
+Edit ops: delete, move, rotate, scale, flip, round, offset, mirror, radial, union, subtract, color, tone (two-tone).
+A result that fails a check exits 1: fix the speck or sliver it names, or try another seed. Then run `similar`.

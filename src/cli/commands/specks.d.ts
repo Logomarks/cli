@@ -1,6 +1,7 @@
 import type { Box } from '@logomarks/core/geometry';
 import type { ArgSpec, Parsed } from '../args.js';
 import type { IO } from '../index.js';
+import type { CommandHelp } from '../help.js';
 
 /** One mark's small parts, as `specks` reports them. */
 export interface MarkSpecks {
@@ -13,5 +14,7 @@ export interface MarkSpecks {
 
 /** What `specks` takes. */
 export const spec: ArgSpec;
+/** What `logomarks specks --help` prints. */
+export const help: CommandHelp;
 /** Runs `specks`; resolves to 1 when anything is reported. */
 export function run(args: Parsed, io: IO): Promise<number>;

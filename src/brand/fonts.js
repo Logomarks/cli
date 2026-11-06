@@ -10,8 +10,11 @@
  * Shrikhand (retro chunky: diners, brunch, ice cream).
  * Each file is one face. An SVG names it by `family` and `weight`: most files
  * are a family of their own (`Inter SemiBold`), but Plex Mono's two share
- * `IBM Plex Mono`, so the weight picks the semibold.
+ * `IBM Plex Mono`, so the weight picks the semibold. `brandFont()` hands a face
+ * to `@logomarks/brand-kit` as bytes, with its name and weight.
  */
+
+import fs from 'node:fs';
 
 /** The typefaces a brand's name can be set in, by id. */
 export const FONTS = {
@@ -72,4 +75,19 @@ export function fontId(name) {
 	if (key in FONTS) return /** @type {import('./fonts.js').FontId} */ (key);
 	const hit = Object.entries(FONTS).find(([, f]) => f.name.toLowerCase().replace(/\s+/g, '-') === key);
 	return hit ? /** @type {import('./fonts.js').FontId} */ (hit[0]) : null;
+}
+
+/** @type {Map<string, Uint8Array>} */
+const bytes = new Map();
+
+/**
+ * A bundled face as `@logomarks/brand-kit` takes it: its name, its bytes (read once), its weight and tracking.
+ *
+ * @param {import('./fonts.js').FontId} [id] The face (inter).
+ * @returns {import('./fonts.js').BrandFont} The font.
+ */
+export function brandFont(id = DEFAULT_FONT) {
+	const f = FONTS[id];
+	if (!bytes.has(f.file)) bytes.set(f.file, new Uint8Array(fs.readFileSync(new URL(`../../data/fonts/${f.file}`, import.meta.url))));
+	return { name: f.name, data: /** @type {Uint8Array} */ (bytes.get(f.file)), weight: f.weight, tracking: f.tracking };
 }

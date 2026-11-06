@@ -41,6 +41,30 @@ test('usage errors exit 2', async () => {
 	assert.equal((await run(['check', 'missing.svg'])).code, 2);
 	assert.equal((await run(['similar', fixturePath('speck'), '--top', 'x'])).code, 2);
 	assert.equal((await run(['--help'])).code, 0);
+	const usage = await run(['check', '--nope', 'x.svg']);
+	assert.match(usage.err, /^logomarks check: unknown option --nope\nRun "logomarks check --help" for usage\.$/);
+});
+
+test('every verb has --help, with usage and options; --version prints the version', async () => {
+	const { COMMANDS } = await import('../src/cli/commands/index.js');
+	for (const verb of Object.keys(COMMANDS)) {
+		for (const argv of [[verb, '--help'], [verb, '-h'], ['help', verb]]) {
+			const r = await run(argv);
+			assert.equal(r.code, 0, argv.join(' '));
+			assert.match(r.out, new RegExp(`^logomarks ${verb}: .+\\n\\nUsage\\n  logomarks ${verb}`), argv.join(' '));
+			assert.match(r.out, /\n  -h, --help /);
+		}
+	}
+	const { version } = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+	assert.equal((await run(['--version'])).out, version);
+	assert.equal((await run(['help', 'nope'])).code, 2);
+});
+
+test('a failure that is not a usage error is one line and exit 1', async () => {
+	const r = await run(['get', 'hex-gem', '-o', path.join(fixturePath('speck'), 'x.svg')]);
+	assert.equal(r.code, 1);
+	assert.match(r.err, /^logomarks get: /);
+	assert.doesNotMatch(r.err, /\n\s+at /);
 });
 
 test('similar --json lists the nearest with verdicts', async () => {
@@ -80,12 +104,28 @@ test('get: SVG to stdout, a PNG to a file, a miss exits 2 with a suggestion', as
 
 test('kit writes the folder', async () => {
 	const dir = path.join(tempDir(), 'kit');
-	const r = await run(['kit', 'hex-gem', '--name', 'Hexa Labs', '--color', '#2E4BFF', '--font', 'Instrument Serif', '-o', dir, '--json']);
+	const r = await run(['kit', 'hex-gem', '--name', 'Hexa Labs', '--color', '#2E4BFF', '--font', 'Instrument Serif', '--tagline', 'Labs', '--styles', 'bold', '--platforms', 'x-header,x-avatar', '-o', dir, '--json']);
 	assert.equal(r.code, 0);
 	const json = JSON.parse(r.out);
-	assert.equal(json.font.id, 'instrument-serif');
+	assert.equal(json.font.name, 'Instrument Serif');
+	assert.equal(json.mark.license, 'CC0-1.0');
 	for (const f of json.files) assert.ok(fs.existsSync(path.join(dir, f)), f);
+	assert.ok(json.files.includes('social/bold/x-header.png'));
+	assert.ok(!json.files.includes('social/bold/x-header.animated.svg'));
 	assert.equal((await run(['kit', 'hex-gem', '--font', 'comic-sans'])).code, 2);
+	assert.equal((await run(['kit', 'hex-gem', '--styles', 'loud'])).code, 2);
+});
+
+test('social writes the pack: platforms by name, styles, animated on request', async () => {
+	const dir = path.join(tempDir(), 'social');
+	const r = await run(['social', 'hex-gem', '--name', 'Hexa', '--platforms', 'linkedin', '--styles', 'minimal,pattern', '--animated', '-o', dir, '--json']);
+	assert.equal(r.code, 0);
+	const files = JSON.parse(r.out).files;
+	assert.ok(files.includes('minimal/linkedin-banner.png') && files.includes('pattern/linkedin-logo.svg'));
+	assert.ok(files.includes('minimal/linkedin-banner.animated.svg'));
+	assert.ok(!files.some((/** @type {string} */ f) => f.startsWith('bold/')));
+	assert.ok(fs.existsSync(path.join(dir, 'README.md')));
+	assert.equal((await run(['social', 'hex-gem', '--platforms', 'myspace'])).code, 2);
 });
 
 test('mockup and cover write PNGs; bad choices exit 2', async () => {
@@ -114,4 +154,34 @@ test('find: words and filters, facets with nothing to search by, 1 when nothing 
 	assert.ok(k.marks.length > 0 && k.marks.every((/** @type {{ slug: string }} */ m) => /(badge|coin|league)(-lower)?-k$/.test(m.slug)));
 	assert.ok(JSON.parse((await run(['find', '--json'])).out).styles.letter > 0);
 	assert.equal((await run(['find', 'zzqx'])).code, 1);
+});
+
+test('parts, glitch, edit and combine: SVG to a file or stdout, the checks, exit 1 on a failing result', async () => {
+	const dir = tempDir();
+	const parts = await run(['parts', 'quad-cove', '-o', path.join(dir, 'parts.png'), '--json']);
+	assert.equal(JSON.parse(parts.out).count, 4);
+	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'parts.png'))), { width: 512, height: 512 });
+	const g = await run(['glitch', 'shear-a', '--preset', 'stepped', '--seed', '5', '-o', path.join(dir, 'g.svg')]);
+	assert.equal(g.code, 0);
+	assert.match(g.out, /stepped at seed 5/);
+	const again = await run(['glitch', 'shear-a', '--preset', 'stepped', '--seed', '5']);
+	assert.equal(again.out, fs.readFileSync(path.join(dir, 'g.svg'), 'utf8').trimEnd());
+	assert.match(again.err, /shear-a/);
+	assert.equal((await run(['glitch', 'shear-a', '--preset', 'melt'])).code, 2);
+	assert.equal((await run(['glitch', 'shear-a', '--preset', 'lane'])).code, 2);
+	assert.equal((await run(['glitch', 'shear-a', '--angle', 'steep'])).code, 2);
+	const opsFile = path.join(dir, 'ops.json');
+	fs.writeFileSync(opsFile, JSON.stringify([{ op: 'delete', parts: [0] }, { op: 'round', radius: 8 }]));
+	const e = JSON.parse((await run(['edit', 'quad-cove', '--ops', `@${opsFile}`, '--json'])).out);
+	assert.equal(e.parts.length, 3);
+	assert.equal(e.ok, true);
+	const sliver = await run(['edit', 'shear-a', '--ops', '[{"op":"mirror"}]', '-o', path.join(dir, 'm.png')]);
+	assert.equal(sliver.code, 1, 'a sliver fails the result');
+	assert.deepEqual(pngSize(fs.readFileSync(path.join(dir, 'm.png'))), { width: 512, height: 512 });
+	assert.equal((await run(['edit', 'quad-cove', '--ops', '{oops'])).code, 2);
+	assert.equal((await run(['edit', 'quad-cove', '--ops', '[{"op":"delete","parts":[7]}]'])).code, 2);
+	const c = JSON.parse((await run(['combine', 'quad-cove', 'shear-a', '--op', 'subtract', '--scale', '0.5', '--json'])).out);
+	assert.equal(c.checks.name, 'quad-cove-subtract-shear-a');
+	assert.equal((await run(['combine', 'quad-cove', '--op', 'union'])).code, 2);
+	assert.equal((await run(['combine', 'quad-cove', 'shear-a', '--op', 'blend'])).code, 2);
 });
