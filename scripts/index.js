@@ -48,7 +48,7 @@ for (const m of list) {
 	const svg = fs.readFileSync(file, 'utf8').trim();
 	const d = descriptions[m.slug];
 	if (!d) throw new Error(`no description for "${m.slug}" in descriptions.json`);
-	const about = { tags: m.tags, collection: m.collection, style: d.style, mood: d.mood, ...(d.letter && { letter: d.letter }), description: d.description, industries: industries[m.slug] ?? [] };
+	const about = { tags: m.tags, collection: m.collection, style: d.style, mood: d.mood, ...(d.letter && { letter: d.letter }), subject: d.subject ?? [], description: d.description, industries: industries[m.slug] ?? [] };
 	const i = marks.push({ slug: m.slug, name: m.name, svg, ...about }) - 1;
 	coverages.push(await outlineCoverage(svg));
 	const lettery = m.tags.includes('letter') || m.tags.includes('number');
