@@ -1,6 +1,6 @@
 {
   "name": "logomarks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Find, check, edit and build on free geometric logomarks from the command line or an AI agent: search the CC0 Logomarks set, check marks against its house rules, edit and glitch them, and build a brand kit, social pack, mockups and covers. Includes an MCP server.",
   "keywords": [
     "logo",

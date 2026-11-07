@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-11-07
+
+### Added
+
+- **Drops 20–25.** The bundled index holds 4,115 marks (from 3,797): font editions, the future-industries round
+  (cybersecurity, data centres, smart home, quantum, longevity, hydrogen, carbon removal, circular economy, vertical
+  farming, battery storage), wellness and Thailand. `find` reaches the ten new industry pages.
+- **Find by subject.** The bundled index carries each mark's `subject` (what it depicts: letter, animal, food-drink …),
+  and `find` matches its label words as the site does ("buildings", "food").
+
 ### Changed
 
-- **Find by subject.** The bundled index carries each mark's `subject` (what it depicts: letter, animal, food-drink …),
-  and `find` matches its label words as the site does ("buildings", "food"). The index is rebuilt for 4,032 marks.
+- **On `@logomarks/core` ^0.1.8:** shape tags (round, square, wide, tall, symmetric, radial, solid, light) are measured
+  from each mark's geometry, so `find round` and the shape filters agree with the site.
 
 ## [1.0.0] — 2026-11-06
 
