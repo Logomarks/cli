@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "@arraypress/color-utils": "^1.5.0",
-    "@arraypress/covers": "^1.7.0",
+    "@arraypress/covers": "^1.8.0",
     "@arraypress/search": "^0.1.0",
     "@logomarks/brand-kit": "^0.4.1",
     "@logomarks/core": "^0.1.7",
