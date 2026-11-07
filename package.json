@@ -82,7 +82,7 @@
     "@arraypress/covers": "^1.8.0",
     "@arraypress/search": "^0.1.0",
     "@logomarks/brand-kit": "^0.4.1",
-    "@logomarks/core": "^0.1.7",
+    "@logomarks/core": "^0.1.8",
     "@logomarks/editor": "^0.2.4",
     "@logomarks/mockups": "^0.5.0",
     "@modelcontextprotocol/sdk": "1.32.1",
