@@ -34,7 +34,7 @@ const read = (/** @type {string} */ file) => JSON.parse(fs.readFileSync(path.joi
 
 /** @type {{ slug: string, name: string, collection: string, tags: string[] }[]} */
 const list = inBoardOrder(read('marks.json'));
-/** @type {Record<string, { style: string, mood: string[], letter?: string, description: string }>} */
+/** @type {Record<string, { style: string, mood: string[], letter?: string, subject?: string[], description: string }>} */
 const descriptions = read('descriptions.json');
 /** @type {Record<string, string[]>} */
 const industries = fs.existsSync(path.join(dir, 'industries.json')) ? read('industries.json') : {};
